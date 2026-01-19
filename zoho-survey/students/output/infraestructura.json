@@ -1,0 +1,28 @@
+{
+  "dimensiones": [
+    {
+      "dimension": "Condiciones ambientales en laboratorios",
+      "t3b": 94.84,
+      "conteo_top3": 2426,
+      "total_validas": 2558
+    },
+    {
+      "dimension": "Equipamiento tecnológico en laboratorios",
+      "t3b": 93.66,
+      "conteo_top3": 2466,
+      "total_validas": 2633
+    },
+    {
+      "dimension": "Aulas de clase",
+      "t3b": 92.2,
+      "conteo_top3": 3686,
+      "total_validas": 3998
+    },
+    {
+      "dimension": "Ambientes y aulas para estudio",
+      "t3b": 88.65,
+      "conteo_top3": 3506,
+      "total_validas": 3955
+    }
+  ]
+}

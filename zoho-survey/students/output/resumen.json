@@ -1,0 +1,12 @@
+{
+  "anio": 2025,
+  "encuestas": 3998,
+  "periodo": {
+    "inicio": "2025-10-20",
+    "fin": "2025-11-28",
+    "dias": 40
+  },
+  "conteos": {
+    "carreras": 12
+  }
+}

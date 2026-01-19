@@ -1,0 +1,19 @@
+{
+  "score": 61.31,
+  "meta": 50,
+  "diferencia": 11.31,
+  "composicion": {
+    "promotores": {
+      "conteo": 2669,
+      "porcentaje": 66.76
+    },
+    "pasivos": {
+      "conteo": 1111,
+      "porcentaje": 27.79
+    },
+    "detractores": {
+      "conteo": 218,
+      "porcentaje": 5.45
+    }
+  }
+}

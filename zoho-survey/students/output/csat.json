@@ -1,0 +1,32 @@
+{
+  "score": 96.97,
+  "meta": 90,
+  "diferencia": 6.97,
+  "distribucion": [
+    {
+      "categoria": "Totalmente satisfecho",
+      "conteo": 1626,
+      "porcentaje": 40.67
+    },
+    {
+      "categoria": "Muy satisfecho",
+      "conteo": 1135,
+      "porcentaje": 28.39
+    },
+    {
+      "categoria": "Satisfecho",
+      "conteo": 1116,
+      "porcentaje": 27.91
+    },
+    {
+      "categoria": "Insatisfecho",
+      "conteo": 97,
+      "porcentaje": 2.43
+    },
+    {
+      "categoria": "Totalmente insatisfecho",
+      "conteo": 24,
+      "porcentaje": 0.6
+    }
+  ]
+}

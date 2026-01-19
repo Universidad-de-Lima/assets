@@ -1,0 +1,132 @@
+{
+  "serie": [
+    {
+      "fecha": "2025-10-20",
+      "respuestas": 210
+    },
+    {
+      "fecha": "2025-10-21",
+      "respuestas": 222
+    },
+    {
+      "fecha": "2025-10-22",
+      "respuestas": 233
+    },
+    {
+      "fecha": "2025-10-23",
+      "respuestas": 272
+    },
+    {
+      "fecha": "2025-10-24",
+      "respuestas": 222
+    },
+    {
+      "fecha": "2025-10-25",
+      "respuestas": 101
+    },
+    {
+      "fecha": "2025-10-27",
+      "respuestas": 198
+    },
+    {
+      "fecha": "2025-10-28",
+      "respuestas": 206
+    },
+    {
+      "fecha": "2025-10-29",
+      "respuestas": 122
+    },
+    {
+      "fecha": "2025-10-30",
+      "respuestas": 205
+    },
+    {
+      "fecha": "2025-10-31",
+      "respuestas": 209
+    },
+    {
+      "fecha": "2025-11-03",
+      "respuestas": 175
+    },
+    {
+      "fecha": "2025-11-05",
+      "respuestas": 137
+    },
+    {
+      "fecha": "2025-11-06",
+      "respuestas": 104
+    },
+    {
+      "fecha": "2025-11-07",
+      "respuestas": 126
+    },
+    {
+      "fecha": "2025-11-08",
+      "respuestas": 116
+    },
+    {
+      "fecha": "2025-11-10",
+      "respuestas": 112
+    },
+    {
+      "fecha": "2025-11-11",
+      "respuestas": 163
+    },
+    {
+      "fecha": "2025-11-12",
+      "respuestas": 69
+    },
+    {
+      "fecha": "2025-11-13",
+      "respuestas": 155
+    },
+    {
+      "fecha": "2025-11-15",
+      "respuestas": 55
+    },
+    {
+      "fecha": "2025-11-17",
+      "respuestas": 81
+    },
+    {
+      "fecha": "2025-11-18",
+      "respuestas": 125
+    },
+    {
+      "fecha": "2025-11-19",
+      "respuestas": 44
+    },
+    {
+      "fecha": "2025-11-20",
+      "respuestas": 133
+    },
+    {
+      "fecha": "2025-11-21",
+      "respuestas": 72
+    },
+    {
+      "fecha": "2025-11-22",
+      "respuestas": 8
+    },
+    {
+      "fecha": "2025-11-24",
+      "respuestas": 4
+    },
+    {
+      "fecha": "2025-11-25",
+      "respuestas": 77
+    },
+    {
+      "fecha": "2025-11-27",
+      "respuestas": 24
+    },
+    {
+      "fecha": "2025-11-28",
+      "respuestas": 18
+    }
+  ],
+  "pico": {
+    "fecha": "2025-10-23",
+    "valor": 272
+  }
+}
