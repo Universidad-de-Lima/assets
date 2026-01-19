@@ -1,0 +1,39 @@
+name: Build Survey JSON
+
+on:
+  push:
+    paths:
+      - "zoho-survey/students/data/**"
+      - "zoho-survey/students/scripts/**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas
+
+      - name: Run build_json.py
+        working-directory: zoho-survey/students
+        run: |
+          python scripts/build_json.py
+
+      - name: Commit generated JSON
+        working-directory: zoho-survey/students
+        run: |
+          git config user.name "survey-bot"
+          git config user.email "survey-bot@users.noreply.github.com"
+          git add output/*.json
+          git commit -m "Auto: update survey JSON" || echo "No changes to commit"
+          git push
