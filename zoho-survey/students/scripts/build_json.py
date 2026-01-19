@@ -1,7 +1,5 @@
 import pandas as pd
 import json
-from datetime import datetime
-from collections import Counter
 
 INPUT = "data/_Encuesta_estudiantil_2025.txt"
 OUT = "output/"
@@ -27,20 +25,20 @@ def t3b_from_counts(series):
 # -----------------------
 # RESUMEN
 # -----------------------
-inicio = pd.to_datetime(df["Inicio"]).min()
-fin = pd.to_datetime(df["Fin"]).max()
+inicio = pd.to_datetime(df["Inicio"], dayfirst=True, errors="coerce").min()
+fin = pd.to_datetime(df["Fin"], dayfirst=True, errors="coerce").max()
 
 resumen = {
     "anio": inicio.year,
-    "encuestas": len(df),
+    "encuestas": int(len(df)),
     "periodo": {
         "inicio": inicio.strftime("%Y-%m-%d"),
         "fin": fin.strftime("%Y-%m-%d"),
-        "dias": (fin - inicio).days + 1
+        "dias": int((fin - inicio).days + 1)
     },
     "conteos": {
-        "carreras": df["Carrera"].nunique(),
-        "facultades": df["Carrera"].map({
+        "carreras": int(df["Carrera"].nunique()),
+        "facultades": int(df["Carrera"].map({
             "Arquitectura":"Arquitectura",
             "Derecho":"Derecho",
             "Economía":"Economía",
@@ -55,7 +53,7 @@ resumen = {
             "Ingeniería de Sistemas":"Ingeniería",
             "Ingeniería Ambiental":"Ingeniería",
             "Ingeniería Mecatrónica":"Ingeniería"
-        }).nunique()
+        }).nunique())
     }
 }
 
@@ -106,8 +104,8 @@ for filename, dims in bloques.items():
         salida.append({
             "dimension": dim,
             "t3b": pct,
-            "conteo_top3": ok,
-            "total_validas": total
+            "conteo_top3": int(ok),
+            "total_validas": int(total)
         })
     with open(f"{OUT}{filename}", "w", encoding="utf-8") as f:
         json.dump({"dimensiones": salida}, f, ensure_ascii=False, indent=2)
@@ -123,18 +121,16 @@ def calc_nps(series):
     return round(((prom - detr) / total) * 100, 2), prom, detr, total
 
 nps, prom, detr, total = calc_nps(df["Recomiendas la Universidad de Lima"])
-
 pasivos = total - prom - detr
 
 nps_json = {
     "score": nps,
     "meta": 50,
     "diferencia": round(nps - 50, 2),
-    "clasificacion": "Excelente" if nps > 60 else "",
     "composicion": {
-        "promotores": {"conteo": prom, "porcentaje": round(prom/total*100,2)},
-        "pasivos": {"conteo": pasivos, "porcentaje": round(pasivos/total*100,2)},
-        "detractores": {"conteo": detr, "porcentaje": round(detr/total*100,2)}
+        "promotores": {"conteo": int(prom), "porcentaje": round(prom/total*100,2)},
+        "pasivos": {"conteo": int(pasivos), "porcentaje": round(pasivos/total*100,2)},
+        "detractores": {"conteo": int(detr), "porcentaje": round(detr/total*100,2)}
     }
 }
 
@@ -145,7 +141,6 @@ with open(f"{OUT}nps.json", "w", encoding="utf-8") as f:
 # CSAT
 # -----------------------
 csat_pct, csat_ok, csat_total = t3b_from_counts(df["La Universidad de Lima"])
-
 dist = df["La Universidad de Lima"].value_counts()
 
 csat_json = {
@@ -158,30 +153,4 @@ csat_json = {
             "conteo": int(v),
             "porcentaje": round(v / csat_total * 100, 2)
         }
-        for k, v in dist.items()
-    ]
-}
-
-with open(f"{OUT}csat.json", "w", encoding="utf-8") as f:
-    json.dump(csat_json, f, ensure_ascii=False, indent=2)
-
-# -----------------------
-# Evolución temporal
-# -----------------------
-df["fecha"] = pd.to_datetime(df["Inicio"]).dt.date
-serie = df.groupby("fecha").size().reset_index(name="respuestas")
-
-pico = serie.loc[serie["respuestas"].idxmax()]
-
-evol = {
-    "serie": [
-        {"fecha": str(r.fecha), "respuestas": int(r.respuestas)}
-        for r in serie.itertuples()
-    ],
-    "pico": {"fecha": str(pico.fecha), "valor": int(pico.respuestas)}
-}
-
-with open(f"{OUT}evolucion_temporal.json", "w", encoding="utf-8") as f:
-    json.dump(evol, f, ensure_ascii=False, indent=2)
-
-print("Todos los JSON generados correctamente.")
+        for k, v in d
