@@ -29,7 +29,7 @@ inicio = pd.to_datetime(df["Inicio"], dayfirst=True, errors="coerce").min()
 fin = pd.to_datetime(df["Fin"], dayfirst=True, errors="coerce").max()
 
 resumen = {
-    "anio": inicio.year,
+    "anio": int(inicio.year),
     "encuestas": int(len(df)),
     "periodo": {
         "inicio": inicio.strftime("%Y-%m-%d"),
@@ -37,23 +37,7 @@ resumen = {
         "dias": int((fin - inicio).days + 1)
     },
     "conteos": {
-        "carreras": int(df["Carrera"].nunique()),
-        "facultades": int(df["Carrera"].map({
-            "Arquitectura":"Arquitectura",
-            "Derecho":"Derecho",
-            "Economía":"Economía",
-            "Comunicación":"Comunicación",
-            "Psicología":"Psicología",
-            "Administración":"Ciencias Empresariales",
-            "Marketing":"Ciencias Empresariales",
-            "Negocios Internacionales":"Ciencias Empresariales",
-            "Contabilidad y Finanzas":"Ciencias Empresariales",
-            "Ingeniería Civil":"Ingeniería",
-            "Ingeniería Industrial":"Ingeniería",
-            "Ingeniería de Sistemas":"Ingeniería",
-            "Ingeniería Ambiental":"Ingeniería",
-            "Ingeniería Mecatrónica":"Ingeniería"
-        }).nunique())
+        "carreras": int(df["Carrera"].nunique())
     }
 }
 
@@ -128,9 +112,9 @@ nps_json = {
     "meta": 50,
     "diferencia": round(nps - 50, 2),
     "composicion": {
-        "promotores": {"conteo": int(prom), "porcentaje": round(prom/total*100,2)},
-        "pasivos": {"conteo": int(pasivos), "porcentaje": round(pasivos/total*100,2)},
-        "detractores": {"conteo": int(detr), "porcentaje": round(detr/total*100,2)}
+        "promotores": {"conteo": int(prom), "porcentaje": round(prom / total * 100, 2)},
+        "pasivos": {"conteo": int(pasivos), "porcentaje": round(pasivos / total * 100, 2)},
+        "detractores": {"conteo": int(detr), "porcentaje": round(detr / total * 100, 2)}
     }
 }
 
@@ -149,8 +133,37 @@ csat_json = {
     "diferencia": round(csat_pct - 90, 2),
     "distribucion": [
         {
-            "categoria": k,
+            "categoria": str(k),
             "conteo": int(v),
             "porcentaje": round(v / csat_total * 100, 2)
         }
-        for k, v in d
+        for k, v in dist.items()
+    ]
+}
+
+with open(f"{OUT}csat.json", "w", encoding="utf-8") as f:
+    json.dump(csat_json, f, ensure_ascii=False, indent=2)
+
+# -----------------------
+# Evolución temporal
+# -----------------------
+df["fecha"] = pd.to_datetime(df["Inicio"], dayfirst=True, errors="coerce").dt.date
+serie = df.groupby("fecha").size().reset_index(name="respuestas")
+
+pico = serie.loc[serie["respuestas"].idxmax()]
+
+evol = {
+    "serie": [
+        {"fecha": str(r.fecha), "respuestas": int(r.respuestas)}
+        for r in serie.itertuples()
+    ],
+    "pico": {
+        "fecha": str(pico.fecha),
+        "valor": int(pico.respuestas)
+    }
+}
+
+with open(f"{OUT}evolucion_temporal.json", "w", encoding="utf-8") as f:
+    json.dump(evol, f, ensure_ascii=False, indent=2)
+
+print("JSON generados correctamente.")
