@@ -141,7 +141,7 @@ resumen = {
     "fecha_inicio": inicio.strftime("%Y-%m-%d"),
     "fecha_fin": fin.strftime("%Y-%m-%d"),
     "dias_recoleccion": int((fin - inicio).days + 1),
-    "anio": int(anio_encuesta)
+    "año": int(anio_encuesta)
 }
 
 with open(f"{OUT}resumen.json", "w", encoding="utf-8") as f:
@@ -173,5 +173,6 @@ with open(f"{OUT}evolucion_temporal.json", "w", encoding="utf-8") as f:
     json.dump(evol, f, ensure_ascii=False, indent=2)
 
 print("Archivos generados correctamente (solo conteos enteros).")
+
 
 
