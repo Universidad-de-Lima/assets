@@ -248,4 +248,21 @@ evol = [
 with open(f"{OUT}evolucion_temporal.json", "w", encoding="utf-8") as f:
     json.dump(evol, f, ensure_ascii=False, indent=2)
 
+# =========================================================
+# 6. ids.json (IDs únicos por Facultad / Carrera / Ciclo)
+# =========================================================
+ids = []
+
+for (fac, car, cic), sub in df.groupby(["Facultad", "Carrera", "Ciclo"]):
+    for _id in sub.index:
+        ids.append({
+            "id": str(_id),
+            "facultad": fac,
+            "carrera": car,
+            "ciclo": cic
+        })
+
+with open(f"{OUT}ids.json", "w", encoding="utf-8") as f:
+    json.dump(ids, f, ensure_ascii=False, indent=2)
+
 print("Archivos generados correctamente (solo conteos enteros).")
