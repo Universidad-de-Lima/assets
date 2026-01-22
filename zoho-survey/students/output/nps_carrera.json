@@ -1,0 +1,74 @@
+[
+  {
+    "carrera": "Administración",
+    "Promotores": 353,
+    "Pasivos": 122,
+    "Detractores": 22
+  },
+  {
+    "carrera": "Arquitectura",
+    "Promotores": 137,
+    "Pasivos": 65,
+    "Detractores": 9
+  },
+  {
+    "carrera": "Comunicación",
+    "Promotores": 264,
+    "Pasivos": 133,
+    "Detractores": 39
+  },
+  {
+    "carrera": "Contabilidad y Finanzas",
+    "Promotores": 64,
+    "Pasivos": 14,
+    "Detractores": 6
+  },
+  {
+    "carrera": "Derecho",
+    "Promotores": 346,
+    "Pasivos": 136,
+    "Detractores": 30
+  },
+  {
+    "carrera": "Economía",
+    "Promotores": 157,
+    "Pasivos": 84,
+    "Detractores": 18
+  },
+  {
+    "carrera": "Ingeniería Civil",
+    "Promotores": 156,
+    "Pasivos": 75,
+    "Detractores": 14
+  },
+  {
+    "carrera": "Ingeniería Industrial",
+    "Promotores": 329,
+    "Pasivos": 112,
+    "Detractores": 18
+  },
+  {
+    "carrera": "Ingeniería de Sistemas",
+    "Promotores": 262,
+    "Pasivos": 108,
+    "Detractores": 12
+  },
+  {
+    "carrera": "Marketing",
+    "Promotores": 151,
+    "Pasivos": 49,
+    "Detractores": 13
+  },
+  {
+    "carrera": "Negocios Internacionales",
+    "Promotores": 255,
+    "Pasivos": 111,
+    "Detractores": 18
+  },
+  {
+    "carrera": "Psicología",
+    "Promotores": 195,
+    "Pasivos": 102,
+    "Detractores": 19
+  }
+]
