@@ -9,10 +9,14 @@ Salida: output/data.json (único archivo)
 
 import pandas as pd
 import json
+import os
 from collections import defaultdict
 
 INPUT = "data/_Encuesta_estudiantil_2025.txt"
 OUT = "output/"
+
+# Crear directorio de salida si no existe
+os.makedirs(OUT, exist_ok=True)
 
 respuestas_texto = [
     "Totalmente satisfecho",
