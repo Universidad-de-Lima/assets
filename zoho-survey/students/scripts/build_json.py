@@ -142,7 +142,7 @@ resumen = {
 df_nps = df[[nps_col, "Carrera", "Ciclo", "Facultad"]].dropna(subset=[nps_col])
 
 promotores_total = int((df_nps[nps_col] >= 9).sum())
-pasivos_total = int((df_nps[nps_col] >= 7) & (df_nps[nps_col] <= 8)).sum()
+pasivos_total = int(((df_nps[nps_col] >= 7) & (df_nps[nps_col] <= 8)).sum())
 detractores_total = int((df_nps[nps_col] <= 6).sum())
 nps_score = calc_nps(promotores_total, pasivos_total, detractores_total)
 
