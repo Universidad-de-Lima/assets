@@ -67,7 +67,7 @@ categoria_dim = {
     "Aula virtual": "Tecnología",
     "Software especializado empleado en la carrera": "Tecnología",
     "Soporte técnico del sistema informático": "Tecnología",
-    "Portal web de la Universidad": "Tecnología",
+    "Portal web de la Universidad (MiUlima)": "Tecnología",
     "Conexión WiFi en el campus": "Tecnología",
 }
 
@@ -441,3 +441,4 @@ print(f"   - evolucion_temporal.json")
 print(f"   - ids.json (simplificado)")
 print(f"   - dashboard_data.json (NUEVO - datos consolidados)")
 print(f"   - filtros.json (NUEVO - listas para filtros)")
+
