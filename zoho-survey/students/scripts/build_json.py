@@ -399,9 +399,7 @@ dashboard_data = {
         "tendencia": "disminuye" if nps_etapas.get("Inicial", 0) > nps_etapas.get("Avanzado", 0) else "aumenta" if nps_etapas.get("Inicial", 0) < nps_etapas.get("Avanzado", 0) else "se mantiene",
         "delta": abs(int(nps_etapas.get("Inicial", 0) - nps_etapas.get("Avanzado", 0))),
         "top_dimensiones": top_dims,
-        "top_facultades": top_facs,
-        "ciclos_12_count": ciclos_12_count,
-        "derecho_count": derecho_count
+        "top_facultades": top_facs
     },
     "nps": nps_total,
     "csat": csat_conteos,
@@ -437,3 +435,4 @@ print(f"   - evolucion_temporal.json")
 print(f"   - ids.json (simplificado)")
 print(f"   - dashboard_data.json (NUEVO - datos consolidados)")
 print(f"   - filtros.json (NUEVO - listas para filtros)")
+
