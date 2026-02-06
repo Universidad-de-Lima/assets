@@ -21,54 +21,54 @@ respuestas_texto = [
 df = pd.read_csv(INPUT, sep=None, engine="python")
 
 # -----------------------
-# CatÃ¡logo Carrera â†’ Facultad
+# Catálogo Carrera → Facultad
 # -----------------------
 carrera_facultad = {
     "Arquitectura": "Facultad de Arquitectura",
-    "AdministraciÃ³n": "Facultad de Ciencias Empresariales",
+    "Administración": "Facultad de Ciencias Empresariales",
     "Contabilidad y Finanzas": "Facultad de Ciencias Empresariales",
     "Marketing": "Facultad de Ciencias Empresariales",
     "Negocios Internacionales": "Facultad de Ciencias Empresariales",
-    "ComunicaciÃ³n": "Facultad de ComunicaciÃ³n",
+    "Comunicación": "Facultad de Comunicación",
     "Derecho": "Facultad de Derecho",
-    "EconomÃ­a": "Facultad de EconomÃ­a",
-    "IngenierÃ­a Ambiental": "Facultad de IngenierÃ­a",
-    "IngenierÃ­a Civil": "Facultad de IngenierÃ­a",
-    "IngenierÃ­a de Sistemas": "Facultad de IngenierÃ­a",
-    "IngenierÃ­a Industrial": "Facultad de IngenierÃ­a",
-    "IngenierÃ­a MecatrÃ³nica": "Facultad de IngenierÃ­a",
-    "PsicologÃ­a": "Facultad de PsicologÃ­a"
+    "Economía": "Facultad de Economía",
+    "Ingeniería Ambiental": "Facultad de Ingeniería",
+    "Ingeniería Civil": "Facultad de Ingeniería",
+    "Ingeniería de Sistemas": "Facultad de Ingeniería",
+    "Ingeniería Industrial": "Facultad de Ingeniería",
+    "Ingeniería Mecatrónica": "Facultad de Ingeniería",
+    "Psicología": "Facultad de Psicología"
 }
 
 df["Facultad"] = df["Carrera"].map(carrera_facultad)
 
 # -----------------------
-# CatÃ¡logo dimensiÃ³n â†’ categorÃ­a
+# Catálogo dimensión → categoría
 # -----------------------
 categoria_dim = {
-    "Perfil del egreso de la carrera": "AcadÃ©mico",
-    "Calidad de la enseÃ±anza en la carrera": "AcadÃ©mico",
-    "Plan curricular y perfil de egreso": "AcadÃ©mico",
-    "Cursos del programa y contenidos": "AcadÃ©mico",
-    "EvaluaciÃ³n del aprendizaje": "AcadÃ©mico",
-    "Intercambio estudiantil": "AcadÃ©mico",
-    "Servicio mÃ©dico y su infraestructura": "Administrativo y Bienestar",
-    "Material bibliogrÃ¡fico en la biblioteca": "Administrativo y Bienestar",
-    "Talleres de actividades artÃ­sticas y culturales": "Administrativo y Bienestar",
-    "AtenciÃ³n del personal administrativo": "Administrativo y Bienestar",
+    "Perfil del egreso de la carrera": "Académico",
+    "Calidad de la enseñanza en la carrera": "Académico",
+    "Plan curricular y perfil de egreso": "Académico",
+    "Cursos del programa y contenidos": "Académico",
+    "Evaluación del aprendizaje": "Académico",
+    "Intercambio estudiantil": "Académico",
+    "Servicio médico y su infraestructura": "Administrativo y Bienestar",
+    "Material bibliográfico en la biblioteca": "Administrativo y Bienestar",
+    "Talleres de actividades artísticas y culturales": "Administrativo y Bienestar",
+    "Atención del personal administrativo": "Administrativo y Bienestar",
     "Actividades deportivas": "Administrativo y Bienestar",
-    "InformaciÃ³n sobre tu rÃ©cord acadÃ©mico": "Administrativo y Bienestar",
-    "Servicio de atenciÃ³n psicopedagÃ³gica": "Administrativo y Bienestar",
+    "Información sobre tu récord académico": "Administrativo y Bienestar",
+    "Servicio de atención psicopedagógica": "Administrativo y Bienestar",
     "Ayuda financiera": "Administrativo y Bienestar",
     "Condiciones ambientales en laboratorios": "Infraestructura",
-    "Equipamiento tecnolÃ³gico en laboratorios": "Infraestructura",
+    "Equipamiento tecnológico en laboratorios": "Infraestructura",
     "Aulas de clase": "Infraestructura",
     "Ambientes y aulas para estudio": "Infraestructura",
-    "Aula virtual": "TecnologÃ­a",
-    "Software especializado empleado en la carrera": "TecnologÃ­a",
-    "Soporte tÃ©cnico del sistema informÃ¡tico": "TecnologÃ­a",
-    "Portal web de la Universidad (MiUlima)": "TecnologÃ­a",
-    "ConexiÃ³n WiFi en el campus": "TecnologÃ­a",
+    "Aula virtual": "Tecnología",
+    "Software especializado empleado en la carrera": "Tecnología",
+    "Soporte técnico del sistema informático": "Tecnología",
+    "Portal web de la Universidad (MiUlima)": "Tecnología",
+    "Conexión WiFi en el campus": "Tecnología",
 }
 
 # -----------------------
@@ -99,7 +99,7 @@ def get_b2b(row):
             row.get("Totalmente insatisfecho", 0))
 
 # =========================================================
-# 1. resumen.json (con mÃ©tricas pre-calculadas)
+# 1. resumen.json (con métricas pre-calculadas)
 # =========================================================
 df["Inicio"] = pd.to_datetime(df["Inicio"], dayfirst=True, errors="coerce")
 df["Fin"] = pd.to_datetime(df["Fin"], dayfirst=True, errors="coerce")
@@ -121,7 +121,7 @@ nps_score = calc_nps(promotores_total, pasivos_total, detractores_total)
 csat_col = "La Universidad de Lima"
 serie_csat = df[csat_col].dropna()
 csat_t3b = int((serie_csat.isin(["Totalmente satisfecho", "Muy satisfecho", "Satisfecho"])).sum())
-csat_total = int(serie_csat.isin(respuestas_texto[:5]).sum())  # Solo respuestas vÃ¡lidas
+csat_total = int(serie_csat.isin(respuestas_texto[:5]).sum())  # Solo respuestas válidas
 csat_score = calc_csat(csat_t3b, csat_total)
 
 resumen = {
@@ -132,8 +132,8 @@ resumen = {
     "fecha_fin": fin.strftime("%Y-%m-%d"),
     "dias": int((fin - inicio).days + 1),
     "dias_recoleccion": fechas_unicas,
-    "aÃ±o": int(anio_encuesta),
-    # MÃ©tricas pre-calculadas
+    "año": int(anio_encuesta),
+    # Métricas pre-calculadas
     "nps": {
         "score": nps_score,
         "promotores": promotores_total,
@@ -337,8 +337,9 @@ with open(f"{OUT}ids.json", "w", encoding="utf-8") as f:
 # Pre-calcular hallazgos clave
 etapa_map = {
     1: 'Inicial', 2: 'Inicial',
-    3: 'Intermedio', 4: 'Intermedio', 5: 'Intermedio', 6: 'Intermedio',
-    7: 'Avanzado', 8: 'Avanzado', 9: 'Avanzado', 10: 'Avanzado', 11: 'Avanzado', 12: 'Avanzado'
+    3: 'Intermedio', 4: 'Intermedio', 5: 'Intermedio',
+    6: 'Avanzado', 7: 'Avanzado', 8: 'Avanzado',
+    9: 'Final', 10: 'Final', 11: 'Final', 12: 'Final'
 }
 
 etapas = {}
@@ -389,7 +390,7 @@ top_facs = sorted(
 )[:2]
 
 # Conteos especiales
-ciclos_12_count = sum(1 for r in ids_conteo if r["ciclo"] in ["1Â° Ciclo", "2Â° Ciclo"])
+ciclos_12_count = sum(1 for r in ids_conteo if r["ciclo"] in ["1° Ciclo", "2° Ciclo"])
 derecho_count = sum(r["count"] for r in ids_conteo if r["carrera"] == "Derecho")
 
 dashboard_data = {
@@ -397,10 +398,10 @@ dashboard_data = {
     "hallazgos": {
         "csat_pct": int(csat_score),
         "nps_score": int(nps_score),
-        "nps_tipo": "Excelente" if nps_score >= 60 else "Bueno" if nps_score >= 30 else "Regular" if nps_score >= 0 else "PÃ©simo",
+        "nps_tipo": "Excelente" if nps_score >= 60 else "Bueno" if nps_score >= 30 else "Regular" if nps_score >= 0 else "Pésimo",
         "nps_etapas": nps_etapas,
-        "tendencia": "disminuye" if nps_etapas.get("Inicial", 0) > nps_etapas.get("Avanzado", 0) else "aumenta" if nps_etapas.get("Inicial", 0) < nps_etapas.get("Avanzado", 0) else "se mantiene",
-        "delta": round(abs(nps_etapas.get("Inicial", 0) - nps_etapas.get("Avanzado", 0)), 1),
+        "tendencia": "disminuye" if nps_etapas.get("Inicial", 0) > nps_etapas.get("Final", 0) else "aumenta" if nps_etapas.get("Inicial", 0) < nps_etapas.get("Final", 0) else "se mantiene",
+        "delta": abs(int(nps_etapas.get("Inicial", 0) - nps_etapas.get("Final", 0))),
         "top_dimensiones": top_dims,
         "top_facultades": top_facs,
         "ciclos_12_count": ciclos_12_count,
@@ -415,7 +416,7 @@ with open(f"{OUT}dashboard_data.json", "w", encoding="utf-8") as f:
     json.dump(dashboard_data, f, ensure_ascii=False, indent=2)
 
 # =========================================================
-# 8. NUEVO: filtros.json (listas Ãºnicas para filtros)
+# 8. NUEVO: filtros.json (listas únicas para filtros)
 # =========================================================
 filtros = {
     "facultades": sorted(df["Facultad"].dropna().unique().tolist()),
@@ -431,7 +432,7 @@ filtros = {
 with open(f"{OUT}filtros.json", "w", encoding="utf-8") as f:
     json.dump(filtros, f, ensure_ascii=False, indent=2)
 
-print("âœ… Archivos generados correctamente (con pre-cÃ¡lculos optimizados).")
+print("✅ Archivos generados correctamente (con pre-cálculos optimizados).")
 print(f"   - resumen.json (con NPS/CSAT pre-calculados)")
 print(f"   - nps.json, nps_carrera.json, nps_ciclo.json, nps_ciclo_carrera.json")
 print(f"   - csat.json, csat_carrera.json, csat_ciclo.json, csat_ciclo_carrera.json")
