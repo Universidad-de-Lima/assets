@@ -26,13 +26,12 @@
     "nps_score": 61,
     "nps_tipo": "Excelente",
     "nps_etapas": {
-      "Final": 58.0,
+      "Avanzado": 59.53,
       "Inicial": 63.13,
-      "Intermedio": 60.59,
-      "Avanzado": 62.53
+      "Intermedio": 61.88
     },
     "tendencia": "disminuye",
-    "delta": 5,
+    "delta": 3,
     "top_dimensiones": [
       {
         "name": "Perfil del egreso de la carrera",
@@ -52,9 +51,7 @@
         "name": "Facultad de Derecho",
         "score": 98.05
       }
-    ],
-    "ciclos_12_count": 23,
-    "derecho_count": 512
+    ]
   },
   "nps": {
     "Promotores": 2669,
