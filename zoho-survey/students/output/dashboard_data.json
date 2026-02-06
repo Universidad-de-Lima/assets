@@ -2,18 +2,18 @@
   "resumen": {
     "encuestas": 3998,
     "carreras": 12,
-    "facultades": 7,
+    "facultades": 3,
     "fecha_inicio": "2025-10-20",
     "fecha_fin": "2025-11-28",
     "dias": 40,
     "dias_recoleccion": 31,
-    "año": 2025,
+    "aÃ±o": 2025,
     "nps": {
-      "score": 61.31,
-      "promotores": 2669,
-      "pasivos": 1111,
-      "detractores": 218,
-      "total": 3998
+      "score": 62.46,
+      "promotores": 953,
+      "pasivos": 375,
+      "detractores": 76,
+      "total": 1404
     },
     "csat": {
       "score": 96.97,
@@ -23,24 +23,23 @@
   },
   "hallazgos": {
     "csat_pct": 96,
-    "nps_score": 61,
+    "nps_score": 62,
     "nps_tipo": "Excelente",
     "nps_etapas": {
-      "Final": 58.0,
-      "Inicial": 63.13,
-      "Intermedio": 60.59,
-      "Avanzado": 62.53
+      "Avanzado": 65.7,
+      "Inicial": 55.7,
+      "Intermedio": 62.0
     },
-    "tendencia": "disminuye",
-    "delta": 5,
+    "tendencia": "aumenta",
+    "delta": 10.0,
     "top_dimensiones": [
       {
         "name": "Perfil del egreso de la carrera",
-        "score": 96.46
+        "score": 96.55
       },
       {
-        "name": "Calidad de la enseñanza en la carrera",
-        "score": 95.6
+        "name": "Condiciones ambientales en laboratorios",
+        "score": 94.49
       }
     ],
     "top_facultades": [
@@ -53,14 +52,14 @@
         "score": 98.05
       }
     ],
-    "ciclos_12_count": 23,
+    "ciclos_12_count": 0,
     "derecho_count": 512
   },
   "nps": {
-    "Promotores": 2669,
-    "Pasivos": 1111,
-    "Detractores": 218,
-    "score": 61.31
+    "Promotores": 953,
+    "Pasivos": 375,
+    "Detractores": 76,
+    "score": 62.46
   },
   "csat": {
     "Totalmente satisfecho": 1626,

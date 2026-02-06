@@ -1,86 +1,86 @@
 [
   {
     "ciclo": "10° Ciclo",
-    "Promotores": 126,
-    "Pasivos": 50,
-    "Detractores": 14,
-    "score": 58.95
+    "Promotores": 62,
+    "Pasivos": 23,
+    "Detractores": 8,
+    "score": 58.06
   },
   {
     "ciclo": "11° Ciclo",
-    "Promotores": 18,
-    "Pasivos": 8,
+    "Promotores": 15,
+    "Pasivos": 5,
     "Detractores": 0,
-    "score": 69.23
+    "score": 75.0
   },
   {
     "ciclo": "12° Ciclo",
-    "Promotores": 19,
-    "Pasivos": 11,
-    "Detractores": 2,
-    "score": 53.12
+    "Promotores": 14,
+    "Pasivos": 6,
+    "Detractores": 1,
+    "score": 61.9
   },
   {
     "ciclo": "1° Ciclo",
-    "Promotores": 103,
-    "Pasivos": 35,
-    "Detractores": 4,
-    "score": 69.72
+    "Promotores": 25,
+    "Pasivos": 16,
+    "Detractores": 1,
+    "score": 57.14
   },
   {
     "ciclo": "2° Ciclo",
-    "Promotores": 228,
-    "Pasivos": 117,
-    "Detractores": 12,
-    "score": 60.5
+    "Promotores": 71,
+    "Pasivos": 38,
+    "Detractores": 7,
+    "score": 55.17
   },
   {
     "ciclo": "3° Ciclo",
-    "Promotores": 222,
-    "Pasivos": 93,
-    "Detractores": 18,
-    "score": 61.26
+    "Promotores": 82,
+    "Pasivos": 31,
+    "Detractores": 7,
+    "score": 62.5
   },
   {
     "ciclo": "4° Ciclo",
-    "Promotores": 574,
-    "Pasivos": 259,
-    "Detractores": 43,
-    "score": 60.62
+    "Promotores": 199,
+    "Pasivos": 87,
+    "Detractores": 12,
+    "score": 62.75
   },
   {
     "ciclo": "5° Ciclo",
-    "Promotores": 308,
-    "Pasivos": 117,
-    "Detractores": 33,
-    "score": 60.04
+    "Promotores": 97,
+    "Pasivos": 38,
+    "Detractores": 15,
+    "score": 54.67
   },
   {
     "ciclo": "6° Ciclo",
-    "Promotores": 419,
-    "Pasivos": 145,
-    "Detractores": 30,
-    "score": 65.49
+    "Promotores": 165,
+    "Pasivos": 54,
+    "Detractores": 13,
+    "score": 65.52
   },
   {
     "ciclo": "7° Ciclo",
-    "Promotores": 235,
-    "Pasivos": 109,
-    "Detractores": 21,
-    "score": 58.63
+    "Promotores": 62,
+    "Pasivos": 26,
+    "Detractores": 7,
+    "score": 57.89
   },
   {
     "ciclo": "8° Ciclo",
-    "Promotores": 303,
-    "Pasivos": 109,
-    "Detractores": 30,
-    "score": 61.76
+    "Promotores": 121,
+    "Pasivos": 27,
+    "Detractores": 5,
+    "score": 75.82
   },
   {
     "ciclo": "9° Ciclo",
-    "Promotores": 114,
-    "Pasivos": 58,
-    "Detractores": 11,
-    "score": 56.28
+    "Promotores": 40,
+    "Pasivos": 24,
+    "Detractores": 0,
+    "score": 62.5
   }
 ]

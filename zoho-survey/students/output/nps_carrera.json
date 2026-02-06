@@ -1,24 +1,10 @@
 [
   {
-    "carrera": "Administración",
-    "Promotores": 353,
-    "Pasivos": 122,
-    "Detractores": 22,
-    "score": 66.6
-  },
-  {
     "carrera": "Arquitectura",
     "Promotores": 137,
     "Pasivos": 65,
     "Detractores": 9,
     "score": 60.66
-  },
-  {
-    "carrera": "Comunicación",
-    "Promotores": 264,
-    "Pasivos": 133,
-    "Detractores": 39,
-    "score": 51.61
   },
   {
     "carrera": "Contabilidad y Finanzas",
@@ -35,34 +21,6 @@
     "score": 61.72
   },
   {
-    "carrera": "Economía",
-    "Promotores": 157,
-    "Pasivos": 84,
-    "Detractores": 18,
-    "score": 53.67
-  },
-  {
-    "carrera": "Ingeniería Civil",
-    "Promotores": 156,
-    "Pasivos": 75,
-    "Detractores": 14,
-    "score": 57.96
-  },
-  {
-    "carrera": "Ingeniería Industrial",
-    "Promotores": 329,
-    "Pasivos": 112,
-    "Detractores": 18,
-    "score": 67.76
-  },
-  {
-    "carrera": "Ingeniería de Sistemas",
-    "Promotores": 262,
-    "Pasivos": 108,
-    "Detractores": 12,
-    "score": 65.45
-  },
-  {
     "carrera": "Marketing",
     "Promotores": 151,
     "Pasivos": 49,
@@ -75,12 +33,5 @@
     "Pasivos": 111,
     "Detractores": 18,
     "score": 61.72
-  },
-  {
-    "carrera": "Psicología",
-    "Promotores": 195,
-    "Pasivos": 102,
-    "Detractores": 19,
-    "score": 55.7
   }
 ]
