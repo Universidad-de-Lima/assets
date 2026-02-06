@@ -337,9 +337,8 @@ with open(f"{OUT}ids.json", "w", encoding="utf-8") as f:
 # Pre-calcular hallazgos clave
 etapa_map = {
     1: 'Inicial', 2: 'Inicial',
-    3: 'Intermedio', 4: 'Intermedio', 5: 'Intermedio',
-    6: 'Avanzado', 7: 'Avanzado', 8: 'Avanzado',
-    9: 'Final', 10: 'Final', 11: 'Final', 12: 'Final'
+    3: 'Intermedio', 4: 'Intermedio', 5: 'Intermedio', 6: 'Intermedio',
+    7: 'Avanzado', 8: 'Avanzado', 9: 'Avanzado', 10: 'Avanzado', 11: 'Avanzado', 12: 'Avanzado'
 }
 
 etapas = {}
@@ -390,9 +389,6 @@ top_facs = sorted(
 )[:2]
 
 # Conteos especiales
-ciclos_12_count = sum(1 for r in ids_conteo if r["ciclo"] in ["1° Ciclo", "2° Ciclo"])
-derecho_count = sum(r["count"] for r in ids_conteo if r["carrera"] == "Derecho")
-
 dashboard_data = {
     "resumen": resumen,
     "hallazgos": {
@@ -400,8 +396,8 @@ dashboard_data = {
         "nps_score": int(nps_score),
         "nps_tipo": "Excelente" if nps_score >= 60 else "Bueno" if nps_score >= 30 else "Regular" if nps_score >= 0 else "Pésimo",
         "nps_etapas": nps_etapas,
-        "tendencia": "disminuye" if nps_etapas.get("Inicial", 0) > nps_etapas.get("Final", 0) else "aumenta" if nps_etapas.get("Inicial", 0) < nps_etapas.get("Final", 0) else "se mantiene",
-        "delta": abs(int(nps_etapas.get("Inicial", 0) - nps_etapas.get("Final", 0))),
+        "tendencia": "disminuye" if nps_etapas.get("Inicial", 0) > nps_etapas.get("Avanzado", 0) else "aumenta" if nps_etapas.get("Inicial", 0) < nps_etapas.get("Avanzado", 0) else "se mantiene",
+        "delta": abs(int(nps_etapas.get("Inicial", 0) - nps_etapas.get("Avanzado", 0))),
         "top_dimensiones": top_dims,
         "top_facultades": top_facs,
         "ciclos_12_count": ciclos_12_count,
