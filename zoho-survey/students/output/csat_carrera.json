@@ -1,5 +1,17 @@
 [
   {
+    "carrera": "Administración",
+    "facultad": "Facultad de Ciencias Empresariales",
+    "Totalmente satisfecho": 225,
+    "Muy satisfecho": 132,
+    "Satisfecho": 130,
+    "Insatisfecho": 8,
+    "Totalmente insatisfecho": 2,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 97.99
+  },
+  {
     "carrera": "Arquitectura",
     "facultad": "Facultad de Arquitectura",
     "Totalmente satisfecho": 62,
@@ -10,6 +22,18 @@
     "No utilizo": 0,
     "No conozco": 0,
     "score": 99.05
+  },
+  {
+    "carrera": "Comunicación",
+    "facultad": "Facultad de Comunicación",
+    "Totalmente satisfecho": 137,
+    "Muy satisfecho": 127,
+    "Satisfecho": 144,
+    "Insatisfecho": 19,
+    "Totalmente insatisfecho": 9,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 93.58
   },
   {
     "carrera": "Contabilidad y Finanzas",
@@ -36,6 +60,54 @@
     "score": 98.05
   },
   {
+    "carrera": "Economía",
+    "facultad": "Facultad de Economía",
+    "Totalmente satisfecho": 91,
+    "Muy satisfecho": 78,
+    "Satisfecho": 78,
+    "Insatisfecho": 11,
+    "Totalmente insatisfecho": 1,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 95.37
+  },
+  {
+    "carrera": "Ingeniería Civil",
+    "facultad": "Facultad de Ingeniería",
+    "Totalmente satisfecho": 107,
+    "Muy satisfecho": 74,
+    "Satisfecho": 58,
+    "Insatisfecho": 3,
+    "Totalmente insatisfecho": 3,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 97.55
+  },
+  {
+    "carrera": "Ingeniería Industrial",
+    "facultad": "Facultad de Ingeniería",
+    "Totalmente satisfecho": 224,
+    "Muy satisfecho": 115,
+    "Satisfecho": 108,
+    "Insatisfecho": 11,
+    "Totalmente insatisfecho": 1,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 97.39
+  },
+  {
+    "carrera": "Ingeniería de Sistemas",
+    "facultad": "Facultad de Ingeniería",
+    "Totalmente satisfecho": 186,
+    "Muy satisfecho": 105,
+    "Satisfecho": 83,
+    "Insatisfecho": 7,
+    "Totalmente insatisfecho": 1,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 97.91
+  },
+  {
     "carrera": "Marketing",
     "facultad": "Facultad de Ciencias Empresariales",
     "Totalmente satisfecho": 80,
@@ -58,5 +130,17 @@
     "No utilizo": 0,
     "No conozco": 0,
     "score": 97.4
+  },
+  {
+    "carrera": "Psicología",
+    "facultad": "Facultad de Psicología",
+    "Totalmente satisfecho": 102,
+    "Muy satisfecho": 103,
+    "Satisfecho": 101,
+    "Insatisfecho": 10,
+    "Totalmente insatisfecho": 0,
+    "No utilizo": 0,
+    "No conozco": 0,
+    "score": 96.84
   }
 ]
