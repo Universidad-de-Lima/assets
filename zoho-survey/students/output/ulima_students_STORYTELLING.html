@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta Satisfacción Estudiantil ULIMA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --ulima-orange: #FF5117;
+            --ulima-orange-soft: rgba(241, 90, 34, 0.15);
+            --ulima-red: #FF0000;
+            --gray-900: #111827;
+            --gray-800: #1F2937;
+            --gray-700: #374151;
+            --gray-600: #4B5563;
+            --gray-500: #6B7280;
+            --gray-400: #9CA3AF;
+            --gray-300: #D1D5DB;
+            --gray-200: #E5E7EB;
+            --gray-100: #F3F4F6;
+            --gray-50: #F9FAFB;
+            --white: #FFFFFF;
+			--black: #000000;
+            --success-pastel: #D1FAE5;
+            --success-text: #065F46;
+            --warning-pastel: #FEF3C7;
+            --warning-text: #92400E;
+            --danger-pastel: #FEE2E2;
+            --danger-text: #991B1B;
+            --info-pastel: #DBEAFE;
+            --info-text: #1E40AF;
+            --pink-pastel: #faebeb;
+            --pink-text: #FF0000;
+            --pink-highlight: #fee2e2;
+            --font-light: 300;
+            --font-regular: 400;
+            --font-medium: 500;
+            --font-bold: 700;
+            --font-black: 900;
+        }
+        
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Roboto', sans-serif; font-weight: var(--font-regular); background: var(--white); color: var(--gray-800); line-height: 1.6; font-size: 14px; }
+        
+        .sticky-header { position: sticky; top: 0; z-index: 1000; background: var(--white); border-bottom: 2px solid var(--ulima-orange); padding: 8px 24px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .header-brand { display: flex; align-items: center; gap: 16px; }
+        .logo-container { display: flex; align-items: center; gap: 8px; }
+        .logo-img { width: 150px; height: auto; }
+        .header-divider { width: 1px; height: 28px; background: var(--gray-300); margin: 0 12px; }
+        .header-title { font-size: 15px; font-weight: var(--font-medium); color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-links a { text-decoration: none; color: var(--gray-600); font-weight: var(--font-medium); font-size: 11px; padding: 6px 12px; border-radius: 4px; transition: all 0.2s ease; text-transform: uppercase; letter-spacing: 0.5px; }
+        .nav-links a:hover, .nav-links a.active { color: var(--ulima-orange); background: var(--ulima-orange-soft); }
+        
+        .progress-bar { height: 3px; background: var(--gray-200); }
+        .progress-fill { height: 100%; background: var(--ulima-orange); width: 0%; transition: width 0.3s ease; }
+        
+        .main-content { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+        .section { margin-bottom: 64px; scroll-margin-top: 130px; }
+        .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-200); }
+        .section-title { font-size: 22px; font-weight: var(--font-black); color: var(--gray-900); letter-spacing: 0.5px; }
+        
+        .hero-box { background: var(--gray-900); color: white; padding: 32px; border-radius: 8px; text-align: center; margin-bottom: 24px; }
+        .hero-main-stat { font-size: 56px; font-weight: var(--font-black); line-height: 1; margin-bottom: 4px; }
+        .hero-label { font-size: 14px; font-weight: var(--font-regular); opacity: 0.8; text-transform: uppercase; letter-spacing: 2px; }
+        .hero-subtitle { margin-top: 12px; font-size: 12px; font-weight: var(--font-light); opacity: 0.6; }
+        
+        .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+        .kpi-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 20px; text-align: center; }
+        .kpi-value { font-size: 36px; font-weight: var(--font-black); line-height: 1; }
+        .kpi-label { font-size: 11px; margin-top: 8px; font-weight: var(--font-medium); text-transform: uppercase; letter-spacing: 0.5px; }
+        .kpi-bar { height: 6px; background: var(--gray-100); border-radius: 3px; margin-top: 12px; overflow: hidden; }
+        .kpi-bar-fill { height: 100%; border-radius: 3px; }
+        .kpi-meta { font-size: 11px; margin-top: 8px; font-weight: var(--font-medium); }
+        
+        .subsection-title { font-size: 13px; font-weight: var(--font-bold); color: var(--gray-700); margin: 28px 0 12px 0; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .subsection-title::before { content: ''; width: 3px; height: 14px; background: var(--ulima-orange); border-radius: 2px; }
+        
+        .timeline-container { background: var(--gray-50); border-radius: 8px; padding: 20px; margin: 16px 0; }
+        .timeline-chart { width: 100%; height: 180px; }
+        .legend { display: flex; gap: 16px; font-size: 10px; font-weight: var(--font-regular); color: var(--gray-500); margin-top: 12px; justify-content: center; }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+        
+        .insight-box { background: var(--gray-50); border-left: 3px solid var(--gray-400); padding: 16px 20px; border-radius: 0 6px 6px 0; margin: 20px 0; }
+        .insight-box.alert { background: var(--danger-pastel); border-color: var(--danger-text); }
+        .insight-box.success { background: var(--success-pastel); border-color: var(--success-text); }
+        .insight-box.info { background: var(--info-pastel); border-color: var(--info-text); }
+        .insight-box.warning { background: var(--warning-pastel); border-color: var(--warning-text); }
+        .insight-box.pink { background: var(--pink-pastel); border-color: var(--pink-text); }
+		.insight-box.black { background: var(--pink-pastel); border-color: var(--pink-text); }
+        .insight-title { font-weight: var(--font-bold); color: var(--gray-700); margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .insight-box.alert .insight-title { color: var(--danger-text); }
+        .insight-box.success .insight-title { color: var(--success-text); }
+        .insight-box.warning .insight-title { color: var(--warning-text); }
+        .insight-box.pink .insight-title { color: var(--pink-text); }
+        .insight-box.info .insight-title { color: var(--info-text); }
+        .insight-text { color: var(--gray-600); font-size: 13px; font-weight: var(--font-regular); }
+        .insight-text strong { font-weight: var(--font-bold); }
+        
+        .csat-distribution { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+        .csat-bar { height: 32px; display: flex; border-radius: 4px; overflow: hidden; font-size: 11px; }
+        .csat-segment { display: flex; align-items: center; justify-content: center; color: white; font-weight: var(--font-bold); cursor: pointer; transition: opacity 0.2s; }
+        .csat-segment:hover { opacity: 0.85; }
+        
+        .filter-container { display: flex; gap: 16px; margin-bottom: 16px; padding: 12px 16px; background: var(--gray-50); border-radius: 6px; border: 1px solid var(--gray-200); align-items: center; flex-wrap: wrap; justify-content: space-between; }
+        .filter-group { display: flex; align-items: center; gap: 8px; flex: 1; }
+        .filter-label { font-size: 11px; font-weight: var(--font-bold); color: var(--gray-600); text-transform: uppercase; letter-spacing: 0.5px; flex-shrink: 0; }
+        .filter-select { padding: 6px 28px 6px 10px; font-size: 12px; font-weight: var(--font-regular); border: 1px solid var(--gray-300); border-radius: 4px; background: var(--white); color: var(--gray-700); cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 8px center; flex: 1; min-width: 150px; }
+        .filter-reset { padding: 6px 12px; font-size: 11px; font-weight: var(--font-medium); color: var(--gray-500); background: var(--white); border: 1px solid var(--gray-300); border-radius: 4px; cursor: pointer; flex-shrink: 0; }
+        .filter-reset:hover { color: var(--ulima-orange); border-color: var(--ulima-orange); }
+        .filter-info { font-size: 11px; font-weight: var(--font-light); color: var(--gray-500); margin-left: auto; font-style: italic; }
+        
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 8px; padding: 20px; }
+        .card-title { font-size: 13px; font-weight: var(--font-bold); color: var(--gray-700); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .bar-chart { margin: 8px 0; }
+        .bar-item { display: flex; align-items: center; margin-bottom: 8px; gap: 12px; }
+        .bar-label { width: 230px; font-size: 11px; font-weight: var(--font-regular); color: var(--gray-700); flex-shrink: 0; text-align: right; line-height: 1.2; min-height: 2.4em; display: flex; align-items: center; justify-content: flex-end; }
+        .bar-container { flex: 1; height: 22px; background: var(--gray-100); border-radius: 3px; overflow: hidden; position: relative; cursor: pointer; }
+        .bar-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; transition: all 0.3s ease; }
+        .bar-fill.high { background: var(--gray-700); }
+        .bar-fill.medium { background: var(--gray-400); }
+        .bar-fill.low { background: var(--ulima-red); }
+        .bar-container:hover .bar-fill { opacity: 0.85; }
+        .bar-value { font-size: 11px; font-weight: var(--font-bold); color: white; }
+        
+        .radar-container { display: flex; flex-direction: column; align-items: center; }
+        .radar-svg { width: 100%; max-width: 600px; height: 520px; margin: 0 auto; display: block; }
+        
+        .visibility-table { width: 100%; border-collapse: collapse; font-size: 11px; margin: 16px 0; }
+        .visibility-table th { background: var(--gray-700); color: white; padding: 10px 12px; text-align: left; font-weight: var(--font-medium); font-size: 10px; text-transform: uppercase; }
+        .visibility-table td { padding: 10px 12px; border-bottom: 1px solid var(--gray-200); font-weight: var(--font-regular); }
+        .visibility-table tr:hover { background: var(--gray-50); }
+        .visibility-table tr.highlight-low { background: var(--pink-highlight); }
+        .visibility-table tr.highlight-low:hover { background: #fecaca; }
+        
+        .distribution-bar { width: 100%; height: 16px; display: flex; border-radius: 2px; overflow: hidden; }
+        .distribution-segment { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: var(--font-bold); color: white; cursor: pointer; transition: opacity 0.2s; }
+        .distribution-segment:hover { opacity: 0.8; }
+        
+        .visibility-bar { display: flex; height: 18px; border-radius: 3px; overflow: hidden; background: var(--gray-100); }
+        .visibility-segment { height: 100%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: var(--font-bold); cursor: pointer; }
+        .visibility-segment:hover { opacity: 0.8; }
+        .visibility-segment.no-conozco { background: var(--warning-pastel); color: var(--warning-text); }
+        .visibility-segment.no-utilizo { background: var(--gray-300); color: var(--gray-700); }
+        .visibility-segment.conocido { background: var(--success-pastel); color: var(--success-text); }
+        
+        .heatmap-cell { padding: 4px 8px; border-radius: 3px; font-weight: var(--font-bold); text-align: center; }
+        .heat-high { background: var(--success-pastel); color: var(--success-text); }
+        .heat-medium { background: var(--warning-pastel); color: var(--warning-text); }
+        .heat-low { background: var(--danger-pastel); color: var(--danger-text); }
+        
+        .tooltip { position: absolute; background: var(--gray-900); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px; font-weight: var(--font-regular); pointer-events: none; z-index: 1001; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.2); white-space: nowrap; }
+        
+        .footer { background: #000; color: #fff; padding: 24px; text-align: center; font-size: 11px; font-weight: var(--font-light); margin-top: 48px; }
+        .footer-logo { display: flex; justify-content: center; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .footer-logo-img { width: 250px; }
+    </style>
+</head>
+<body>
+    <header class="sticky-header">
+        <div class="header-brand">
+            <div class="logo-container">
+                <img class="logo-img" src="https://Universidad-de-Lima.github.io/assets/zoho-survey/img/logo-horizontal.png" alt="Universidad de Lima" loading="lazy">
+            </div>
+            <div class="header-divider"></div>
+            <span class="header-title" id="header-title">Cargando...</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#ejecutivo">Ejecutivo</a>
+            <a href="#operativo">Operativo</a>
+            <a href="#analitico">Detallado</a>
+        </nav>
+    </header>
+    
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="tooltip" id="tooltip"></div>
+
+    <main class="main-content">
+        <!-- SECCIÓN 1: EJECUTIVO -->
+        <section id="ejecutivo" class="section">
+            <div class="section-header">
+                <h2 class="section-title">RESUMEN EJECUTIVO</h2>
+            </div>
+            
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-nps-value" style="color: var(--ulima-orange);">--</div>
+                    <div class="kpi-label" style="color: var(--ulima-orange);">Indice de Promotores Netos</div>
+                    <div class="kpi-bar"><div class="kpi-bar-fill" id="kpi-nps-bar" style="background: var(--ulima-orange); width: 0%;"></div></div>
+                    <div class="kpi-meta" id="kpi-nps-meta" style="color: var(--ulima-orange);">--</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-csat-value" style="color: var(--success-text);">--%</div>
+                    <div class="kpi-label" style="color: var(--success-text);">Nivel de Satisfacción</div>
+                    <div class="kpi-bar"><div class="kpi-bar-fill" id="kpi-csat-bar" style="background: var(--success-text); width: 0%;"></div></div>
+                    <div class="kpi-meta" id="kpi-csat-meta" style="color: var(--success-text);">--</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-value" id="kpi-dias-value">--</div>
+                    <div class="kpi-label">Días de Recolección</div>
+                    <div class="kpi-bar"><div class="kpi-bar-fill" id="kpi-dias-bar" style="background: var(--gray-700); width: 0%;"></div></div>
+                    <div class="kpi-meta" id="kpi-dias-meta">--</div>
+                </div>
+            </div>
+
+            <div class="kpi-note" style="background: var(--white); color: var(--gray-800); font-size: 12px; font-weight: var(--font-regular); text-align: left; margin-bottom: 24px;"></div>
+
+            <div class="subsection-title">Composición del Indice de Promotores Netos</div>
+            <div class="csat-distribution">
+                <div class="csat-bar" id="nps-bar"></div>
+                <div class="legend" id="nps-legend"></div>
+            </div>
+
+            <div class="subsection-title">Distribución del Nivel de Satisfacción</div>
+            <div class="csat-distribution">
+                <div class="csat-bar" id="csat-bar"></div>
+                <div class="legend" id="csat-legend"></div>
+            </div>
+
+            <div class="insight-box info">
+                <div class="insight-title">Hallazgos</div>
+                <div class="insight-text" id="insight-hallazgos">Cargando...</div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: OPERATIVO -->
+        <section id="operativo" class="section">
+            <div class="section-header">
+                <h2 class="section-title">ANÁLISIS OPERATIVO</h2>
+            </div>
+
+            <div class="filter-container">
+                <div class="filter-group">
+                    <span class="filter-label">Facultad:</span>
+                    <select class="filter-select" id="filter-facultad-top3">
+                        <option value="">Todas las facultades / programas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Carrera:</span>
+                    <select class="filter-select" id="filter-carrera-top3">
+                        <option value="">Todas las carreras</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Ciclo:</span>
+                    <select class="filter-select" id="filter-ciclo-top3">
+                        <option value="">Todos los ciclos</option>
+                    </select>
+                </div>
+                <button class="filter-reset" id="reset-top3">Limpiar</button>
+                
+            </div>
+
+            <div class="subsection-title">Nivel de satisfacción</div>
+            <div class="grid-2" id="top3-cards">
+                <div class="card">
+                    <div class="card-title">Académico</div>
+                    <div class="bar-chart" id="chart-academico"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Infraestructura</div>
+                    <div class="bar-chart" id="chart-infraestructura"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Tecnología</div>
+                    <div class="bar-chart" id="chart-tecnologia"></div>
+                </div>
+                <div class="card">
+                    <div class="card-title">Servicios al estudiante</div>
+                    <div class="bar-chart" id="chart-admin-bienestar"></div>
+                </div>
+            </div>
+
+            <div class="subsection-title">Radar General - Nivel de satisfacción</div>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <span class="filter-label">Facultad:</span>
+                    <select class="filter-select" id="filter-facultad-radar">
+                        <option value="">Todas las facultades / programas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Carrera:</span>
+                    <select class="filter-select" id="filter-carrera-radar">
+                        <option value="">Todas las carreras</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Ciclo:</span>
+                    <select class="filter-select" id="filter-ciclo-radar">
+                        <option value="">Todos los ciclos</option>
+                    </select>
+                </div>
+                <button class="filter-reset" id="reset-radar">Limpiar</button>
+                
+            </div>
+            <div class="card radar-container">
+                <svg class="radar-svg" viewBox="-40 -40 600 600" preserveAspectRatio="xMidYMid meet" id="radar-chart"></svg>
+                <div class="legend">
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--gray-700);"></div>≥90% (Fortaleza)</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--gray-400);"></div>80-89% (Adecuado)</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--ulima-red);"></div>&lt;80% (Atención)</div>
+                </div>
+            </div>
+            <div class="insight-box success">
+                <div class="insight-title">Fortalezas</div>
+                <div class="insight-text" id="insight-fortaleza">Cargando...</div>
+            </div>
+            </section>
+
+        <!-- SECCIÓN 3: ANALÍTICO -->
+        <section id="analitico" class="section">
+            <div class="section-header">
+                <h2 class="section-title">ANÁLISIS DETALLADO</h2>
+            </div>
+
+            <div class="subsection-title">Nivel de satisfacción detallado</div>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <span class="filter-label">Facultad:</span>
+                    <select class="filter-select" id="filter-facultad-preguntas">
+                        <option value="">Todas las facultades / programas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Carrera:</span>
+                    <select class="filter-select" id="filter-carrera-preguntas">
+                        <option value="">Todas las carreras</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Ciclo:</span>
+                    <select class="filter-select" id="filter-ciclo-preguntas">
+                        <option value="">Todos los ciclos</option>
+                    </select>
+                </div>
+                <button class="filter-reset" id="reset-preguntas">Limpiar</button>
+                
+            </div>
+
+            <table class="visibility-table" id="tabla-preguntas">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">DIMENSIÓN</th>
+                        <th style="width: 15%; text-align: center;">Top 3 Box</th>
+                        <th style="width: 15%; text-align: center;">CATEGORÍA</th>
+                        <th style="width: 40%; text-align: center;">DISTRIBUCIÓN</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-preguntas"></tbody>
+            </table>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background: var(--gray-800);"></div> Totalmente Satisfecho</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--gray-500);"></div> Muy Satisfecho</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--gray-300);"></div> Satisfecho</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--ulima-orange);"></div> Insatisfecho</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--ulima-red);"></div> Totalmente Insatisfecho</div>
+            </div>
+            <div class="insight-box warning">
+                <div class="insight-title">Nota</div>
+                <div class="insight-text">
+                    El <strong>Top 3 Box</strong> se calcula dividiendo la suma de las respuestas 
+					“<strong>Totalmente Satisfecho</strong>”, “<strong>Muy Satisfecho</strong>” y “<strong>Satisfecho</strong>” 
+					entre el total de respuestas, excluyendo “<strong>No conozco</strong>”, “<strong>No utilizo</strong>” y las respuestas <strong>vacías</strong>.
+                </div>
+            </div>
+
+            <div class="subsection-title">Detalle por Carrera</div>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <span class="filter-label">Facultad:</span>
+                    <select class="filter-select" id="filter-facultad-detalle">
+                        <option value="">Todas las facultades / programas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Ciclo:</span>
+                    <select class="filter-select" id="filter-ciclo-detalle">
+                        <option value="">Todos los ciclos</option>
+                    </select>
+                </div>
+                <button class="filter-reset" id="reset-detalle">Limpiar</button>
+                
+            </div>
+
+            <table class="visibility-table" id="tabla-detalle">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">CARRERA</th>
+                        <th style="width: 15%; text-align: center;">ENCUESTAS</th>
+                        <th style="width: 15%; text-align: center;">Indice de Promotores Netos</th>
+                        <th style="width: 15%; text-align: center;">Nivel de Satisfacción</th>
+                        <th style="width: 25%; text-align: center;">VS PROMEDIO <span id="detalle-promedio-ref"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-detalle"></tbody>
+            </table>
+
+            <div class="subsection-title">Visibilidad de Servicios (No conozco / No utilizo)</div>
+            <div class="filter-container">
+                <div class="filter-group">
+                    <span class="filter-label">Facultad:</span>
+                    <select class="filter-select" id="filter-facultad-visibilidad">
+                        <option value="">Todas las facultades / programas</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Carrera:</span>
+                    <select class="filter-select" id="filter-carrera-visibilidad">
+                        <option value="">Todas las carreras</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <span class="filter-label">Ciclo:</span>
+                    <select class="filter-select" id="filter-ciclo-visibilidad">
+                        <option value="">Todos los ciclos</option>
+                    </select>
+                </div>
+                <button class="filter-reset" id="reset-visibilidad">Limpiar</button>
+                
+            </div>
+
+            <table class="visibility-table" id="tabla-visibilidad">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">DIMENSIÓN</th>
+                        <th style="width: 15%; text-align: center;">NO CONOZCO</th>
+                        <th style="width: 15%; text-align: center;">NO UTILIZO</th>
+                        <th style="width: 40%; text-align: center;">DISTRIBUCIÓN</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-visibilidad"></tbody>
+            </table>
+            <div class="legend">
+                <div class="legend-item"><div class="legend-dot" style="background: var(--warning-pastel);"></div> No Conozco</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--gray-300);"></div> No Utilizo</div>
+                <div class="legend-item"><div class="legend-dot" style="background: var(--success-pastel);"></div> Conoce/Utiliza</div>
+            </div>
+
+            <div class="insight-box pink">
+                <div class="insight-title">Oportunidad de mejora</div>
+                <div class="insight-text" id="insight-atencion">Cargando...</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-logo">
+            <img class="footer-logo-img" src="https://Universidad-de-Lima.github.io/assets/zoho-survey/img/logo-isotipo.png" alt="Universidad de Lima" loading="lazy">
+        </div>
+        <div id="footer-fuente">Fuente: Encuesta Satisfacción Estudiantil <span id="footer-anio">--</span> - Estudios Generales / Pregrado</div>
+        <div style="margin-top: 4px;" id="footer-periodo">Período: Cargando... · Dirección de Planificación y Acreditación</div>
+    </footer>
+
+    <script>
+    (function() {
+        'use strict';
+        
+        const BASE_URL = 'https://Universidad-de-Lima.github.io/assets/zoho-survey/students/output';
+        const META_NPS = 50;
+        const META_CSAT = 93;
+        
+        // Cache de datos
+        const cache = {
+            dashboard: null,
+            dimensiones: null,
+            ids: null,
+            nps_ciclo_carrera: null,
+            csat_ciclo_carrera: null,
+            nps_carrera: null,
+            csat_carrera: null,
+            filtros: null
+        };
+        
+        // CSAT global para comparaciones
+        let csatScoreGlobal = 0;
+        
+        // Datos para Top3 por categoría
+        let top3Data = { academico: [], infraestructura: [], tecnologia: [], adminBienestar: [] };
+        
+        // Utilidades
+        const $ = id => document.getElementById(id);
+        const $$ = sel => document.querySelectorAll(sel);
+        const formatDate = ds => new Date(ds + 'T12:00:00').toLocaleDateString('es-PE', { day: 'numeric', month: 'short' });
+        const formatNumber = n => n.toLocaleString('es-PE');
+        const pct = (v, t) => t > 0 ? Math.round((v / t) * 100) : 0;
+        const pct2 = (v, t) => t > 0 ? ((v / t) * 100).toFixed(2) : '0.00';
+        
+        // Tooltip
+        const tooltip = $('tooltip');
+        window.showTooltip = (e, content) => {
+            tooltip.innerHTML = content;
+            tooltip.style.display = 'block';
+            tooltip.style.left = (e.pageX + 10) + 'px';
+            tooltip.style.top = (e.pageY - 10) + 'px';
+        };
+        window.hideTooltip = () => tooltip.style.display = 'none';
+        
+        // Carga de datos
+        async function loadAllData() {
+            try {
+                const [dashboard, dimensiones, ids, nps_cc, csat_cc, nps_car, csat_car, filtros] = await Promise.all([
+                    fetch(`${BASE_URL}/dashboard_data.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/dimensiones.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/ids.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/nps_ciclo_carrera.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/csat_ciclo_carrera.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/nps_carrera.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/csat_carrera.json`).then(r => r.json()),
+                    fetch(`${BASE_URL}/filtros.json`).then(r => r.json())
+                ]);
+                
+                cache.dashboard = dashboard;
+                cache.dimensiones = dimensiones;
+                cache.ids = ids;
+                cache.nps_ciclo_carrera = nps_cc;
+                cache.csat_ciclo_carrera = csat_cc;
+                cache.nps_carrera = nps_car;
+                cache.csat_carrera = csat_car;
+                cache.filtros = filtros;
+                csatScoreGlobal = dashboard.resumen.csat.score;
+                
+                return true;
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                return false;
+            }
+        }
+        
+        // =========================================================
+        // SECCIÓN EJECUTIVO
+        // =========================================================
+        function renderEjecutivo() {
+            const d = cache.dashboard;
+            const r = d.resumen;
+            const h = d.hallazgos;
+            
+            $('header-title').textContent = `Encuesta Satisfacción Estudiantil ${r.año}`;
+            $('footer-anio').textContent = r.año;
+            $('footer-periodo').textContent = `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
+            
+            const nps = r.nps;
+            $('kpi-nps-value').textContent = nps.score;
+            $('kpi-nps-bar').style.width = `${Math.min(100, Math.max(0, nps.score))}%`;
+            $('kpi-nps-meta').textContent = `Meta ${META_NPS}`;
+            
+            const csat = r.csat;
+            $('kpi-csat-value').textContent = `${csat.score}%`;
+            $('kpi-csat-bar').style.width = `${csat.score}%`;
+            $('kpi-csat-meta').textContent = `Meta ${META_CSAT}%`;
+            
+            $('kpi-dias-value').textContent = r.dias_recoleccion;
+            $('kpi-dias-bar').style.width = `${(r.dias_recoleccion / r.dias) * 100}%`;
+            $('kpi-dias-meta').textContent = `${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año}`;
+            
+            renderNPSBar(d.nps);
+            renderCSATBar(d.csat);
+            
+            const etapas = h.nps_etapas;
+            $('insight-hallazgos').innerHTML = `
+                Actualmente <strong>+${h.csat_pct}%</strong> de estudiantes están satisfechos con la Universidad de Lima.
+                El Indice de Promotores Netos que es de <strong>+${h.nps_score}</strong>, posiciona a la institución en el rango
+                "<strong>${h.nps_tipo}</strong>" a nivel global,
+                pero <strong>${h.tendencia}</strong> conforme avanza la carrera:
+                <strong>Inicial (${etapas.Inicial || 0})</strong> →
+                <strong>Intermedio (${etapas.Intermedio || 0})</strong> →
+                <strong>Avanzado (${etapas.Avanzado || 0})</strong>.
+                Teniendo una diferencia de <strong>-${h.delta}</strong> puntos en el ciclo de vida estudiantil.
+            `;
+            
+            const dims = h.top_dimensiones;
+            const facs = h.top_facultades;
+            $('insight-fortaleza').innerHTML = `
+                La satisfacción en <strong>${dims[0]?.name || '-'}</strong> (${dims[0]?.score || 0}%) y
+                <strong>${dims[1]?.name || '-'}</strong> (${dims[1]?.score || 0}%)
+                son las mejores evaluadas.
+                La <strong>${facs[0]?.name || '-'}</strong> (${facs[0]?.score || 0}%) y
+                la <strong>${facs[1]?.name || '-'}</strong> (${facs[1]?.score || 0}%)
+                son las que destacan en satisfacción.
+            `;
+            
+        }
+        
+        function renderNPSBar(nps) {
+            const total = nps.Promotores + nps.Pasivos + nps.Detractores;
+            $('nps-bar').innerHTML = `
+                <div class="csat-segment" style="width:${pct(nps.Promotores, total)}%; background:var(--gray-700);"
+                     data-label="Promotores (9-10)" data-value="${formatNumber(nps.Promotores)} (${pct2(nps.Promotores, total)}%)">${pct(nps.Promotores, total)}%</div>
+                <div class="csat-segment" style="width:${pct(nps.Pasivos, total)}%; background:var(--gray-400);"
+                     data-label="Pasivos (7-8)" data-value="${formatNumber(nps.Pasivos)} (${pct2(nps.Pasivos, total)}%)">${pct(nps.Pasivos, total)}%</div>
+                <div class="csat-segment" style="width:${pct(nps.Detractores, total)}%; background:var(--ulima-orange);"
+                     data-label="Detractores (0-6)" data-value="${formatNumber(nps.Detractores)} (${pct2(nps.Detractores, total)}%)">${pct(nps.Detractores, total)}%</div>
+            `;
+            $('nps-legend').innerHTML = `
+                <div class="legend-item"><div class="legend-dot" style="background:var(--gray-700);"></div>Promotores: ${formatNumber(nps.Promotores)}</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--gray-400);"></div>Pasivos: ${formatNumber(nps.Pasivos)}</div>
+                <div class="legend-item"><div class="legend-dot" style="background:var(--ulima-orange);"></div>Detractores: ${formatNumber(nps.Detractores)}</div>
+            `;
+            addTooltipToSegments('#nps-bar .csat-segment');
+        }
+        
+        function renderCSATBar(csat) {
+            const labels = [
+                { key: 'Totalmente satisfecho', color: 'var(--gray-900)' },
+                { key: 'Muy satisfecho', color: 'var(--gray-600)' },
+                { key: 'Satisfecho', color: 'var(--gray-400)' },
+                { key: 'Insatisfecho', color: 'var(--ulima-orange)' },
+                { key: 'Totalmente insatisfecho', color: 'var(--ulima-red)' }
+            ];
+            const total = labels.reduce((sum, l) => sum + (csat[l.key] || 0), 0);
+            
+            $('csat-bar').innerHTML = labels.filter(l => csat[l.key] > 0).map(l => {
+                const p = pct(csat[l.key], total);
+                return `<div class="csat-segment" style="width:${p}%; background:${l.color};"
+                         data-label="${l.key}" data-value="${formatNumber(csat[l.key])} (${pct2(csat[l.key], total)}%)">${p < 2 ? '' : p + '%'}</div>`;
+            }).join('');
+            
+            $('csat-legend').innerHTML = labels.filter(l => csat[l.key] > 0).map(l =>
+                `<div class="legend-item"><div class="legend-dot" style="background:${l.color};"></div>${l.key}: ${formatNumber(csat[l.key])}</div>`
+            ).join('');
+            
+            addTooltipToSegments('#csat-bar .csat-segment');
+        }
+        
+        function renderTimeline(data) {
+            const svg = $('timeline-svg');
+            const W = 1000, H = 180;
+            const pad = { left: 50, right: 20, top: 20, bottom: 40 };
+            const maxY = Math.max(...data.map(d => d.respuestas));
+            const xScale = i => pad.left + i * ((W - pad.left - pad.right) / (data.length - 1));
+            const yScale = v => pad.top + (H - pad.top - pad.bottom) * (1 - v / maxY);
+            
+            let html = `
+                <defs><linearGradient id="areaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#374151;stop-opacity:0.3"/>
+                    <stop offset="100%" style="stop-color:#374151;stop-opacity:0.05"/>
+                </linearGradient></defs>
+                <line x1="${pad.left}" y1="${pad.top}" x2="${pad.left}" y2="${H - pad.bottom}" stroke="#E5E7EB"/>
+                <line x1="${pad.left}" y1="${H - pad.bottom}" x2="${W - pad.right}" y2="${H - pad.bottom}" stroke="#E5E7EB"/>
+                <line x1="${pad.left}" y1="${yScale(maxY/2)}" x2="${W - pad.right}" y2="${yScale(maxY/2)}" stroke="#E5E7EB" stroke-dasharray="4"/>
+            `;
+            
+            const points = data.map((d, i) => `${xScale(i)},${yScale(d.respuestas)}`).join(' ');
+            html += `<path d="M ${points} L ${xScale(data.length - 1)},${H - pad.bottom} L ${xScale(0)},${H - pad.bottom} Z" fill="url(#areaGrad)"/>`;
+            html += `<path d="M ${points}" fill="none" stroke="#374151" stroke-width="2"/>`;
+            
+            [0, Math.floor(data.length * 0.33), Math.floor(data.length * 0.66), data.length - 1].forEach(i => {
+                html += `<text x="${xScale(i)}" y="${H - 10}" font-size="9" fill="#6B7280" text-anchor="middle">${formatDate(data[i].fecha)}</text>`;
+            });
+            
+            const pico = data.reduce((a, b) => b.respuestas > a.respuestas ? b : a);
+            const picoIdx = data.findIndex(d => d.fecha === pico.fecha);
+            $('timeline-legend-peak').innerHTML = `<div class="legend-dot" style="background: var(--ulima-orange);"></div>Pico: ${formatDate(pico.fecha)} (${pico.respuestas})`;
+            html += `<circle cx="${xScale(picoIdx)}" cy="${yScale(pico.respuestas)}" r="5" fill="#FF5117"/>
+                     <text x="${xScale(picoIdx)}" y="${yScale(pico.respuestas) - 10}" fill="#FF5117" font-size="9" text-anchor="middle" font-weight="600">${pico.respuestas} (Pico)</text>`;
+            
+            svg.innerHTML = html;
+            svg.addEventListener('mousemove', e => {
+                const rect = svg.getBoundingClientRect();
+                const idx = Math.round((e.clientX - rect.left - pad.left) / ((W - pad.left - pad.right) / (data.length - 1)));
+                if (data[idx]) {
+                    const d = data[idx];
+                    showTooltip(e, `<strong>${new Date(d.fecha + 'T12:00:00').toLocaleDateString('es-PE', { weekday: 'short', day: 'numeric', month: 'short' })}:</strong> ${d.respuestas} encuestas`);
+                }
+            });
+            svg.addEventListener('mouseleave', hideTooltip);
+        }
+        
+        function addTooltipToSegments(selector) {
+            $$(selector).forEach(seg => {
+                seg.addEventListener('mousemove', e => showTooltip(e, `${seg.dataset.label}: ${seg.dataset.value}`));
+                seg.addEventListener('mouseleave', hideTooltip);
+            });
+        }
+        
+        // =========================================================
+        // SECCIÓN OPERATIVO - TOP 3 BOX POR CATEGORÍA
+        // =========================================================
+        function dimensionAplica(rows, dimension) {
+            return rows.some(r => r.dimension === dimension && 
+                ((r['Totalmente satisfecho'] || 0) + (r['Muy satisfecho'] || 0) + (r['Satisfecho'] || 0) +
+                 (r['Insatisfecho'] || 0) + (r['Totalmente insatisfecho'] || 0)) > 0);
+        }
+        
+        function excluirCondicionesLaboratorio(rows) {
+            const equip = rows.filter(r => r.dimension === 'Equipamiento tecnológico en laboratorios' &&
+                ((r['No utilizo'] || 0) > 0 || (r['No conozco'] || 0) > 0));
+            return equip.length > 0 ? 'Condiciones ambientales en laboratorios' : null;
+        }
+        
+        function renderTop3Bars(containerId, data, dimName) {
+            const container = $(containerId);
+            container.innerHTML = '';
+            
+            data.forEach(item => {
+                const barClass = item.pct >= 90 ? 'high' : item.pct >= 80 ? 'medium' : 'low';
+                const barItem = document.createElement('div');
+                barItem.className = 'bar-item';
+                barItem.innerHTML = `
+                    <div class="bar-label">${item.dim}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill ${barClass}" style="width:${item.pct}%">
+                            <span class="bar-value">${item.pct.toFixed(1)}%</span>
+                        </div>
+                    </div>
+                `;
+                
+                const barContainer = barItem.querySelector('.bar-container');
+                barContainer.addEventListener('mousemove', e => {
+                    const fac = $('filter-facultad-top3').value;
+                    const car = $('filter-carrera-top3').value;
+                    const cic = $('filter-ciclo-top3').value;
+                    const rows = filtrarDatos(cache.dimensiones, fac, car, cic).filter(r => r.dimension === item.dim);
+                    
+                    const conteos = {
+                        'Totalmente satisfecho': 0, 'Muy satisfecho': 0, 'Satisfecho': 0,
+                        'Insatisfecho': 0, 'Totalmente insatisfecho': 0, 'No utilizo': 0, 'No conozco': 0
+                    };
+                    rows.forEach(r => Object.keys(conteos).forEach(k => conteos[k] += r[k] || 0));
+                    
+                    const lines = Object.entries(conteos).filter(([_, v]) => v > 0).map(([k, v]) => `${k}: ${formatNumber(v)}`);
+                    if (lines.length === 0) return hideTooltip();
+                    showTooltip(e, lines.join('<br>'));
+                });
+                barContainer.addEventListener('mouseleave', hideTooltip);
+                container.appendChild(barItem);
+            });
+        }
+        
+        function updateTop3Filters() {
+            const fac = $('filter-facultad-top3').value;
+            const car = $('filter-carrera-top3').value;
+            const cic = $('filter-ciclo-top3').value;
+            
+            const filtered = filtrarDatos(cache.dimensiones, fac, car, cic);
+            
+            // Contador de encuestas
+            const idsFiltered = filtrarDatos(cache.ids, fac, car, cic);
+            const totalCount = idsFiltered.reduce((sum, r) => sum + r.count, 0);
+            
+            
+            top3Data = { academico: [], infraestructura: [], tecnologia: [], adminBienestar: [] };
+            const categorias = {
+                academico: 'Académico',
+                infraestructura: 'Infraestructura',
+                tecnologia: 'Tecnología',
+                adminBienestar: 'Administrativo y Bienestar'
+            };
+            const dimLabExcluida = excluirCondicionesLaboratorio(filtered);
+            
+            Object.entries(categorias).forEach(([key, nombre]) => {
+                const dims = {};
+                filtered.filter(r => r.categoria === nombre).forEach(r => {
+                    if (!dimensionAplica(filtered, r.dimension)) return;
+                    if (dimLabExcluida && r.dimension === dimLabExcluida) return;
+                    if (!dims[r.dimension]) dims[r.dimension] = { total: 0, top3: 0 };
+                    
+                    const total = (r['Totalmente satisfecho'] || 0) + (r['Muy satisfecho'] || 0) + (r['Satisfecho'] || 0) +
+                                  (r['Insatisfecho'] || 0) + (r['Totalmente insatisfecho'] || 0);
+                    const top3 = (r['Totalmente satisfecho'] || 0) + (r['Muy satisfecho'] || 0) + (r['Satisfecho'] || 0);
+                    dims[r.dimension].total += total;
+                    dims[r.dimension].top3 += top3;
+                });
+                
+                top3Data[key] = Object.entries(dims)
+                    .map(([dim, v]) => ({ dim, pct: v.total ? (v.top3 / v.total) * 100 : 0, categoria: nombre }))
+                    .sort((a, b) => b.pct - a.pct);
+            });
+            
+            renderTop3Bars('chart-academico', top3Data.academico);
+            renderTop3Bars('chart-infraestructura', top3Data.infraestructura);
+            renderTop3Bars('chart-tecnologia', top3Data.tecnologia);
+            renderTop3Bars('chart-admin-bienestar', top3Data.adminBienestar);
+        }
+        
+        function cortarTexto(texto, max) {
+            return texto.length > max ? texto.slice(0, max - 1) + '…' : texto;
+        }
+        
+        function renderRadar() {
+            let allDims = [];
+            Object.values(top3Data).forEach(arr => arr.forEach(d => allDims.push(d)));
+            
+            if (allDims.length === 0) {
+                $('radar-chart').innerHTML = '<text x="300" y="250" text-anchor="middle">Sin datos</text>';
+                return;
+            }
+            
+            // Ordenar de mayor a menor valor (espiral descendente)
+            allDims.sort((a, b) => b.pct - a.pct);
+            
+            const svg = $('radar-chart');
+            const cx = 300, cy = 250, maxR = 200;
+            const n = allDims.length;
+            let html = '';
+            
+            [0.25, 0.5, 0.75, 1].forEach(f => {
+                html += `<circle cx="${cx}" cy="${cy}" r="${maxR * f}" fill="none" stroke="#E5E7EB" stroke-width="1"/>`;
+            });
+            
+            allDims.forEach((d, i) => {
+                const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+                const x2 = cx + maxR * Math.cos(angle);
+                const y2 = cy + maxR * Math.sin(angle);
+                html += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#E5E7EB" stroke-width="1"/>`;
+                
+                const labelOffset = 26;
+                const lx = cx + (maxR + labelOffset) * Math.cos(angle);
+                const ly = cy + (maxR + labelOffset) * Math.sin(angle);
+                const anchor = angle > Math.PI / 2 || angle < -Math.PI / 2 ? 'end' : 'start';
+                
+                html += `<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
+                    dominant-baseline="middle" onmousemove="showTooltip(event, '${d.dim}')" onmouseleave="hideTooltip()">${cortarTexto(d.dim, 26)}</text>`;
+            });
+            
+            const points = allDims.map((d, i) => {
+                const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+                const r = (d.pct / 100) * maxR;
+                return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+            }).join(' ');
+            
+            html += `<polygon points="${points}" fill="rgba(55,65,81,0.18)" stroke="#374151" stroke-width="2"/>`;
+            
+            allDims.forEach((d, i) => {
+                const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+                const r = (d.pct / 100) * maxR;
+                const px = cx + r * Math.cos(angle);
+                const py = cy + r * Math.sin(angle);
+                const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
+                html += `<circle cx="${px}" cy="${py}" r="4" fill="${color}" style="cursor:pointer"
+                    onmousemove="showTooltip(event, '${d.dim}: ${d.pct.toFixed(2)}%')" onmouseleave="hideTooltip()"/>`;
+            });
+            
+            svg.innerHTML = html;
+        }
+        
+        // =========================================================
+        // SECCIÓN OPERATIVO - DISTRIBUCIÓN POR CARRERA/CICLO
+        // =========================================================
+        function renderCarreras() {
+            const fac = $('filter-facultad-carreras').value;
+            const cic = $('filter-ciclo-carreras').value;
+            
+            let filtered = filtrarDatos(cache.ids, fac, null, cic);
+            const conteo = {};
+            filtered.forEach(r => { conteo[r.carrera] = (conteo[r.carrera] || 0) + r.count; });
+            
+            const npsMap = {}, csatMap = {};
+            filtrarDatos(cache.nps_ciclo_carrera, fac, null, cic).forEach(r => {
+                if (!npsMap[r.carrera]) npsMap[r.carrera] = { p: 0, pa: 0, d: 0 };
+                npsMap[r.carrera].p += r.Promotores;
+                npsMap[r.carrera].pa += r.Pasivos;
+                npsMap[r.carrera].d += r.Detractores;
+            });
+            filtrarDatos(cache.csat_ciclo_carrera, fac, null, cic).forEach(r => {
+                if (!csatMap[r.carrera]) csatMap[r.carrera] = { t3b: 0, total: 0 };
+                const t3b = (r["Totalmente satisfecho"] || 0) + (r["Muy satisfecho"] || 0) + (r["Satisfecho"] || 0);
+                const total = t3b + (r["Insatisfecho"] || 0) + (r["Totalmente insatisfecho"] || 0);
+                csatMap[r.carrera].t3b += t3b;
+                csatMap[r.carrera].total += total;
+            });
+            
+            const data = Object.entries(conteo).map(([carrera, count]) => {
+                const nps = npsMap[carrera];
+                const csat = csatMap[carrera];
+                return {
+                    carrera, count,
+                    nps: nps ? ((nps.p - nps.d) / (nps.p + nps.pa + nps.d) * 100).toFixed(2) : '0.00',
+                    csat: csat && csat.total > 0 ? ((csat.t3b / csat.total) * 100).toFixed(2) : '0.00'
+                };
+            }).sort((a, b) => b.count - a.count);
+            
+            const maxCount = Math.max(...data.map(d => d.count));
+            const minCount = Math.min(...data.map(d => d.count));
+            const container = $('chart-carreras');
+            container.innerHTML = '';
+            
+            data.forEach((item, idx) => {
+                // Solo el menor valor es naranja, el resto negro (alto) o gris (medio)
+                let barClass;
+                if (item.count === minCount) {
+                    barClass = 'low'; // naranja
+                } else if (idx < data.length / 2) {
+                    barClass = 'high'; // negro - valores altos
+                } else {
+                    barClass = 'medium'; // gris - valores medios
+                }
+                const div = document.createElement('div');
+                div.className = 'bar-item';
+                div.innerHTML = `
+                    <div class="bar-label">${item.carrera}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill ${barClass}" style="width:${(item.count / maxCount) * 100}%">
+                            <span class="bar-value">${formatNumber(item.count)}</span>
+                        </div>
+                    </div>
+                `;
+                div.querySelector('.bar-container').addEventListener('mousemove', e => showTooltip(e, `<strong>${item.carrera}</strong><br>NPS: ${item.nps}<br>CSAT: ${item.csat}%`));
+                div.querySelector('.bar-container').addEventListener('mouseleave', hideTooltip);
+                container.appendChild(div);
+            });
+            
+            
+        }
+        
+        function renderCiclos() {
+            const fac = $('filter-facultad-ciclos').value;
+            const car = $('filter-carrera-ciclos').value;
+            
+            let filtered = filtrarDatos(cache.ids, fac, car, null);
+            const conteo = {};
+            filtered.forEach(r => { conteo[r.ciclo] = (conteo[r.ciclo] || 0) + r.count; });
+            
+            const npsMap = {}, csatMap = {};
+            filtrarDatos(cache.nps_ciclo_carrera, fac, car, null).forEach(r => {
+                if (!npsMap[r.ciclo]) npsMap[r.ciclo] = { p: 0, pa: 0, d: 0 };
+                npsMap[r.ciclo].p += r.Promotores;
+                npsMap[r.ciclo].pa += r.Pasivos;
+                npsMap[r.ciclo].d += r.Detractores;
+            });
+            filtrarDatos(cache.csat_ciclo_carrera, fac, car, null).forEach(r => {
+                if (!csatMap[r.ciclo]) csatMap[r.ciclo] = { t3b: 0, total: 0 };
+                const t3b = (r["Totalmente satisfecho"] || 0) + (r["Muy satisfecho"] || 0) + (r["Satisfecho"] || 0);
+                const total = t3b + (r["Insatisfecho"] || 0) + (r["Totalmente insatisfecho"] || 0);
+                csatMap[r.ciclo].t3b += t3b;
+                csatMap[r.ciclo].total += total;
+            });
+            
+            const data = Object.entries(conteo).map(([ciclo, count]) => {
+                const nps = npsMap[ciclo];
+                const csat = csatMap[ciclo];
+                return {
+                    ciclo, count,
+                    nps: nps ? ((nps.p - nps.d) / (nps.p + nps.pa + nps.d) * 100).toFixed(2) : '0.00',
+                    csat: csat && csat.total > 0 ? ((csat.t3b / csat.total) * 100).toFixed(2) : '0.00'
+                };
+            }).sort((a, b) => (parseInt(a.ciclo) || 0) - (parseInt(b.ciclo) || 0));
+            
+            const maxCount = Math.max(...data.map(d => d.count));
+            const minCount = Math.min(...data.map(d => d.count));
+            // Ordenar por count para determinar posición relativa
+            const sortedByCount = [...data].sort((a, b) => b.count - a.count);
+            const container = $('chart-ciclos');
+            container.innerHTML = '';
+            
+            data.forEach(item => {
+                // Solo el menor valor es naranja
+                const posInSorted = sortedByCount.findIndex(d => d.ciclo === item.ciclo);
+                let barClass;
+                if (item.count === minCount) {
+                    barClass = 'low'; // naranja
+                } else if (posInSorted < sortedByCount.length / 2) {
+                    barClass = 'high'; // negro
+                } else {
+                    barClass = 'medium'; // gris
+                }
+                const div = document.createElement('div');
+                div.className = 'bar-item';
+                div.innerHTML = `
+                    <div class="bar-label">${item.ciclo}</div>
+                    <div class="bar-container">
+                        <div class="bar-fill ${barClass}" style="width:${(item.count / maxCount) * 100}%">
+                            <span class="bar-value">${formatNumber(item.count)}</span>
+                        </div>
+                    </div>
+                `;
+                div.querySelector('.bar-container').addEventListener('mousemove', e => showTooltip(e, `<strong>${item.ciclo}</strong><br>NPS: ${item.nps}<br>CSAT: ${item.csat}%`));
+                div.querySelector('.bar-container').addEventListener('mouseleave', hideTooltip);
+                container.appendChild(div);
+            });
+            
+            
+        }
+        
+        // =========================================================
+        // SECCIÓN ANALÍTICO - DETALLE POR DIMENSIÓN
+        // =========================================================
+        function renderPreguntas() {
+            const fac = $('filter-facultad-preguntas').value;
+            const car = $('filter-carrera-preguntas').value;
+            const cic = $('filter-ciclo-preguntas').value;
+            
+            const filtered = filtrarDatos(cache.dimensiones, fac, car, cic);
+            
+            const dimMap = {};
+            filtered.forEach(r => {
+                if (!dimMap[r.dimension]) {
+                    dimMap[r.dimension] = { categoria: r.categoria, totSat: 0, muySat: 0, sat: 0, insat: 0, totInsat: 0 };
+                }
+                dimMap[r.dimension].totSat += r['Totalmente satisfecho'] || 0;
+                dimMap[r.dimension].muySat += r['Muy satisfecho'] || 0;
+                dimMap[r.dimension].sat += r['Satisfecho'] || 0;
+                dimMap[r.dimension].insat += r['Insatisfecho'] || 0;
+                dimMap[r.dimension].totInsat += r['Totalmente insatisfecho'] || 0;
+            });
+            
+            const data = Object.entries(dimMap).map(([dim, v]) => {
+                const total = v.totSat + v.muySat + v.sat + v.insat + v.totInsat;
+                const top3 = v.totSat + v.muySat + v.sat;
+                const p1 = total > 0 ? Math.round((v.totSat / total) * 100) : 0;
+                const p2 = total > 0 ? Math.round((v.muySat / total) * 100) : 0;
+                const p3 = total > 0 ? Math.round((v.sat / total) * 100) : 0;
+                const p4 = total > 0 ? Math.round((v.insat / total) * 100) : 0;
+                const p5 = total > 0 ? Math.max(0, 100 - p1 - p2 - p3 - p4) : 0;
+                
+                return {
+                    dimension: dim, categoria: v.categoria,
+                    top3box: total > 0 ? ((top3 / total) * 100).toFixed(2) : '0.00',
+                    totSat: v.totSat, muySat: v.muySat, sat: v.sat, insat: v.insat, totInsat: v.totInsat,
+                    total, pctTotSat: p1, pctMuySat: p2, pctSat: p3, pctInsat: p4, pctTotInsat: p5
+                };
+            }).filter(item => parseFloat(item.top3box) > 0).sort((a, b) => parseFloat(b.top3box) - parseFloat(a.top3box));
+            
+            const idsFiltered = filtrarDatos(cache.ids, fac, car, cic);
+            
+            
+            const tbody = $('tbody-preguntas');
+            tbody.innerHTML = '';
+            const fmtPct = v => v < 3 ? '' : `${v}%`;
+            
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                let catCorta = item.categoria;
+                if (catCorta === 'Administrativo y Bienestar') catCorta = 'Bienestar';
+                
+                tr.innerHTML = `
+                    <td>${item.dimension}</td>
+                    <td style="text-align: center;"><span class="heatmap-cell ${parseFloat(item.top3box) >= 90 ? 'heat-high' : parseFloat(item.top3box) >= 80 ? 'heat-medium' : 'heat-low'}">${item.top3box}%</span></td>
+                    <td style="text-align: center;">${catCorta}</td>
+                    <td>
+                        <div class="distribution-bar">
+                            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente Satisfecho" data-value="${item.totSat}">${fmtPct(item.pctTotSat)}</div>
+                            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy Satisfecho" data-value="${item.muySat}">${fmtPct(item.pctMuySat)}</div>
+                            <div class="distribution-segment" style="width:${item.pctSat}%; background: var(--gray-300); color: var(--gray-700);" data-label="Satisfecho" data-value="${item.sat}">${fmtPct(item.pctSat)}</div>
+                            <div class="distribution-segment" style="width:${item.pctInsat}%; background: var(--ulima-orange);" data-label="Insatisfecho" data-value="${item.insat}">${fmtPct(item.pctInsat)}</div>
+                            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente Insatisfecho" data-value="${item.totInsat}">${fmtPct(item.pctTotInsat)}</div>
+                        </div>
+                    </td>
+                `;
+                
+                tr.querySelectorAll('.distribution-segment').forEach(seg => {
+                    seg.addEventListener('mousemove', e => showTooltip(e, `${seg.dataset.label}: ${formatNumber(parseInt(seg.dataset.value))}`));
+                    seg.addEventListener('mouseleave', hideTooltip);
+                });
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // =========================================================
+        // SECCIÓN ANALÍTICO - DETALLE POR CARRERA
+        // =========================================================
+        function renderDetalleCarreras() {
+            const fac = $('filter-facultad-detalle').value;
+            const cic = $('filter-ciclo-detalle').value;
+            
+            let filteredIds = filtrarDatos(cache.ids, fac, null, cic);
+            
+            const conteo = {};
+            filteredIds.forEach(r => { conteo[r.carrera] = (conteo[r.carrera] || 0) + r.count; });
+            
+            // Usar datos filtrados para NPS y CSAT
+            const npsMap = {};
+            filtrarDatos(cache.nps_ciclo_carrera, fac, null, cic).forEach(r => {
+                if (!npsMap[r.carrera]) npsMap[r.carrera] = { prom: 0, pas: 0, det: 0 };
+                npsMap[r.carrera].prom += r.Promotores;
+                npsMap[r.carrera].pas += r.Pasivos || 0;
+                npsMap[r.carrera].det += r.Detractores;
+            });
+            
+            const csatMap = {};
+            filtrarDatos(cache.csat_ciclo_carrera, fac, null, cic).forEach(r => {
+                if (!csatMap[r.carrera]) csatMap[r.carrera] = { t3b: 0, total: 0 };
+                const t3b = (r["Totalmente satisfecho"] || 0) + (r["Muy satisfecho"] || 0) + (r["Satisfecho"] || 0);
+                const total = t3b + (r["Insatisfecho"] || 0) + (r["Totalmente insatisfecho"] || 0);
+                csatMap[r.carrera].t3b += t3b;
+                csatMap[r.carrera].total += total;
+            });
+            
+            // VS PROMEDIO: usar promedio global, excepto para Programa de Estudios Generales
+            let csatPromedioReferencia = csatScoreGlobal;
+            if (esEstudiosGenerales(fac)) {
+                // Calcular promedio solo de ciclos 1° y 2°
+                let totalT3b = 0, totalResp = 0;
+                Object.values(csatMap).forEach(v => {
+                    totalT3b += v.t3b;
+                    totalResp += v.total;
+                });
+                csatPromedioReferencia = totalResp > 0 ? (totalT3b / totalResp) * 100 : csatScoreGlobal;
+            }
+            
+            // Actualizar header con valor de referencia
+            $('detalle-promedio-ref').textContent = `(${csatPromedioReferencia.toFixed(2)}%)`;
+            
+            const data = Object.entries(conteo).map(([carrera, encuestas]) => {
+                const nps = npsMap[carrera];
+                const csat = csatMap[carrera];
+                const npsTotal = nps ? (nps.prom + nps.pas + nps.det) : 0;
+                const npsScore = npsTotal > 0 ? ((nps.prom - nps.det) / npsTotal) * 100 : 0;
+                const csatScore = csat && csat.total > 0 ? (csat.t3b / csat.total) * 100 : 0;
+                return { carrera, encuestas, nps: npsScore, csat: csatScore, vsProm: csatScore - csatPromedioReferencia };
+            }).sort((a, b) => a.carrera.localeCompare(b.carrera));
+            
+            
+            
+            const tbody = $('tbody-detalle');
+            tbody.innerHTML = '';
+            
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                
+                const vsProm = item.vsProm >= 0
+                    ? `<span style="color: #00B04F; font-weight: 600;">+${item.vsProm.toFixed(2)}</span>`
+                    : `<span style="color: #FF0000; font-weight: 600;">${item.vsProm.toFixed(2)}</span>`;
+                
+                tr.innerHTML = `
+                    <td>${item.carrera}</td>
+                    <td style="text-align: center;">${formatNumber(item.encuestas)}</td>
+                    <td style="text-align: center; font-weight: 700;">${item.nps.toFixed(2)}</td>
+                    <td style="text-align: center;">${item.csat.toFixed(2)}%</td>
+                    <td style="text-align: center;">${vsProm}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+        
+        // =========================================================
+        // SECCIÓN ANALÍTICO - VISIBILIDAD
+        // =========================================================
+        function renderVisibilidad() {
+            const fac = $('filter-facultad-visibilidad').value;
+            const car = $('filter-carrera-visibilidad').value;
+            const cic = $('filter-ciclo-visibilidad').value;
+            
+            const filtered = filtrarDatos(cache.dimensiones, fac, car, cic);
+            
+            const dimMap = {};
+            filtered.forEach(r => {
+                if (!dimMap[r.dimension]) dimMap[r.dimension] = { noConozco: 0, noUtilizo: 0, conoce: 0 };
+                dimMap[r.dimension].noConozco += r['No conozco'] || 0;
+                dimMap[r.dimension].noUtilizo += r['No utilizo'] || 0;
+                dimMap[r.dimension].conoce += (r['Totalmente satisfecho'] || 0) + (r['Muy satisfecho'] || 0) +
+                    (r['Satisfecho'] || 0) + (r['Insatisfecho'] || 0) + (r['Totalmente insatisfecho'] || 0);
+            });
+            
+            const data = Object.entries(dimMap)
+                .filter(([_, v]) => v.noConozco > 0 || v.noUtilizo > 0)
+                .map(([dim, v]) => {
+                    const total = v.noConozco + v.noUtilizo + v.conoce;
+                    return {
+                        dimension: dim, noConozco: v.noConozco, noUtilizo: v.noUtilizo, conoce: v.conoce,
+                        pctNoConozco: total > 0 ? (v.noConozco / total) * 100 : 0,
+                        pctNoUtilizo: total > 0 ? (v.noUtilizo / total) * 100 : 0,
+                        pctConoce: total > 0 ? (v.conoce / total) * 100 : 0, total
+                    };
+                })
+                .sort((a, b) => (a.pctNoConozco + a.pctNoUtilizo) - (b.pctNoConozco + b.pctNoUtilizo));
+            
+            const idsFiltered = filtrarDatos(cache.ids, fac, car, cic);
+            
+            
+            const tbody = $('tbody-visibilidad');
+            tbody.innerHTML = '';
+            
+            data.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                
+                tr.innerHTML = `
+                    <td>${item.dimension}</td>
+                    <td style="text-align: center;">${formatNumber(item.noConozco)} (${item.pctNoConozco.toFixed(2)}%)</td>
+                    <td style="text-align: center;">${formatNumber(item.noUtilizo)} (${item.pctNoUtilizo.toFixed(2)}%)</td>
+                    <td>
+                        <div class="visibility-bar">
+                            <div class="visibility-segment no-conozco" style="width:${item.pctNoConozco}%;" data-label="No Conozco" data-value="${item.noConozco}">${item.pctNoConozco.toFixed(2)}%</div>
+                            <div class="visibility-segment no-utilizo" style="width:${item.pctNoUtilizo}%;" data-label="No Utilizo" data-value="${item.noUtilizo}">${item.pctNoUtilizo.toFixed(2)}%</div>
+                            <div class="visibility-segment conocido" style="width:${item.pctConoce}%;" data-label="Conoce/Utiliza" data-value="${item.conoce}">${item.pctConoce.toFixed(2)}%</div>
+                        </div>
+                    </td>
+                `;
+                
+                tr.querySelectorAll('.visibility-segment').forEach(seg => {
+                    seg.addEventListener('mousemove', e => showTooltip(e, `${seg.dataset.label}: ${formatNumber(parseInt(seg.dataset.value))}`));
+                    seg.addEventListener('mouseleave', hideTooltip);
+                });
+                tbody.appendChild(tr);
+            });
+            
+            // Insight de atención
+            if (data.length >= 2) {
+                const lowest = data[data.length - 1];
+                const secondLowest = data[data.length - 2];
+                $('insight-atencion').innerHTML = `
+                    <strong>${lowest.dimension} (${lowest.pctNoConozco.toFixed(1)}% No Conozco + ${lowest.pctNoUtilizo.toFixed(1)}% No Utilizo)</strong> y
+                    <strong>${secondLowest.dimension} (${secondLowest.pctNoConozco.toFixed(1)}% No Conozco + ${secondLowest.pctNoUtilizo.toFixed(1)}% No Utilizo)</strong>
+                    son las que presentan menor visibilidad.
+                `;
+            }
+        }
+        
+        // =========================================================
+        // FILTROS GENÉRICOS
+        // =========================================================
+        // Carreras con 12 ciclos
+        const CARRERAS_12_CICLOS = ['Derecho', 'Psicología'];
+        const FACULTADES_12_CICLOS = ['Facultad de Derecho', 'Facultad de Psicología'];
+        const PROGRAMA_ESTUDIOS_GENERALES = 'Programa de Estudios Generales';
+        const CICLOS_ESTUDIOS_GENERALES = ['1° Ciclo', '2° Ciclo'];
+        
+        function esEstudiosGenerales(facultad) {
+            return facultad === PROGRAMA_ESTUDIOS_GENERALES;
+        }
+        
+        // Función auxiliar para filtrar datos considerando Programa de Estudios Generales
+        function filtrarDatos(datos, fac, car, cic) {
+            return datos.filter(r => {
+                // Si es Programa de Estudios Generales, filtrar solo por ciclos 1° y 2°
+                if (esEstudiosGenerales(fac)) {
+                    return CICLOS_ESTUDIOS_GENERALES.includes(r.ciclo) &&
+                           (!car || r.carrera === car) &&
+                           (!cic || r.ciclo === cic);
+                }
+                // Filtro normal
+                return (!fac || r.facultad === fac) &&
+                       (!car || r.carrera === car) &&
+                       (!cic || r.ciclo === cic);
+            });
+        }
+        
+        function getCiclosForFiltro(facultad, carrera) {
+            // Programa de Estudios Generales: solo 1° y 2° Ciclo
+            if (esEstudiosGenerales(facultad)) {
+                return CICLOS_ESTUDIOS_GENERALES;
+            }
+            // Derecho y Psicología: 1° al 12° Ciclo
+            if (FACULTADES_12_CICLOS.includes(facultad) || CARRERAS_12_CICLOS.includes(carrera)) {
+                return cache.filtros.ciclos.filter(c => {
+                    const num = parseInt(c) || 0;
+                    return num <= 12;
+                });
+            }
+            // Otras facultades: 1° al 10° Ciclo
+            return cache.filtros.ciclos.filter(c => {
+                const num = parseInt(c) || 0;
+                return num <= 10;
+            });
+        }
+        
+        function getCiclosForCarrera(carrera) {
+            return getCiclosForFiltro(null, carrera);
+        }
+        
+        function ordenarFacultades(lista) {
+            return [PROGRAMA_ESTUDIOS_GENERALES, ...lista.sort()];
+        }
+        
+        function setupFilters(prefix, onChangeCallback) {
+            const selFac = $(`filter-facultad-${prefix}`);
+            const selCar = $(`filter-carrera-${prefix}`);
+            const selCic = $(`filter-ciclo-${prefix}`);
+            const filtros = cache.filtros;
+            
+            // Agregar Programa de Estudios Generales primero, luego las facultades ordenadas
+            const facultadesOrdenadas = ordenarFacultades(filtros.facultades);
+            facultadesOrdenadas.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f;
+                opt.textContent = f;
+                selFac.appendChild(opt);
+            });
+            
+            const updateCascade = () => {
+                const facVal = selFac.value;
+                const carVal = selCar ? selCar.value : '';
+                
+                if (selCar) {
+                    // Si es Programa de Estudios Generales, mostrar todas las carreras
+                    const carrerasBase = (facVal && !esEstudiosGenerales(facVal)) ? filtros.facultad_carrera[facVal] : filtros.carreras;
+                    const carreras = [...carrerasBase].sort();
+                    const carActual = selCar.value;
+                    selCar.innerHTML = '<option value="">Todas las carreras</option>';
+                    carreras.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c;
+                        opt.textContent = c;
+                        selCar.appendChild(opt);
+                    });
+                    if (carreras.includes(carActual)) selCar.value = carActual;
+                }
+                if (selCic) {
+                    const cicActual = selCic.value;
+                    selCic.innerHTML = '<option value="">Todos los ciclos</option>';
+                    // Ciclos según facultad y carrera seleccionada
+                    const ciclos = (facVal || carVal) ? getCiclosForFiltro(facVal, carVal) : filtros.ciclos;
+                    ciclos.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c;
+                        opt.textContent = c;
+                        selCic.appendChild(opt);
+                    });
+                    if (ciclos.includes(cicActual)) selCic.value = cicActual;
+                }
+                if (onChangeCallback) onChangeCallback();
+            };
+            
+            selFac.addEventListener('change', updateCascade);
+            if (selCar) {
+                selCar.addEventListener('change', () => {
+                    // Actualizar ciclos cuando cambia carrera
+                    const facVal = selFac.value;
+                    const carVal = selCar.value;
+                    if (selCic) {
+                        const cicActual = selCic.value;
+                        selCic.innerHTML = '<option value="">Todos los ciclos</option>';
+                        const ciclos = (facVal || carVal) ? getCiclosForFiltro(facVal, carVal) : cache.filtros.ciclos;
+                        ciclos.forEach(c => {
+                            const opt = document.createElement('option');
+                            opt.value = c;
+                            opt.textContent = c;
+                            selCic.appendChild(opt);
+                        });
+                        if (ciclos.includes(cicActual)) selCic.value = cicActual;
+                    }
+                    if (onChangeCallback) onChangeCallback();
+                });
+            }
+            if (selCic) selCic.addEventListener('change', onChangeCallback);
+            
+            const resetBtn = $(`reset-${prefix}`);
+            if (resetBtn) {
+                resetBtn.addEventListener('click', () => {
+                    selFac.value = '';
+                    if (selCar) selCar.value = '';
+                    if (selCic) selCic.value = '';
+                    updateCascade();
+                });
+            }
+            
+            updateCascade();
+        }
+        
+        // =========================================================
+        // RADAR INDEPENDIENTE
+        // =========================================================
+        function renderRadarIndependiente() {
+            const fac = $('filter-facultad-radar').value;
+            const car = $('filter-carrera-radar').value;
+            const cic = $('filter-ciclo-radar').value;
+            
+            const filtered = filtrarDatos(cache.dimensiones, fac, car, cic);
+            
+            // Contador
+            const idsFiltered = filtrarDatos(cache.ids, fac, car, cic);
+            
+            
+            // Calcular T3B por dimensión
+            const dimLabExcluida = excluirCondicionesLaboratorio(filtered);
+            const dims = {};
+            
+            filtered.forEach(r => {
+                if (!dimensionAplica(filtered, r.dimension)) return;
+                if (dimLabExcluida && r.dimension === dimLabExcluida) return;
+                if (!dims[r.dimension]) dims[r.dimension] = { total: 0, top3: 0, categoria: r.categoria };
+                
+                const total = (r['Totalmente satisfecho'] || 0) + (r['Muy satisfecho'] || 0) + (r['Satisfecho'] || 0) +
+                              (r['Insatisfecho'] || 0) + (r['Totalmente insatisfecho'] || 0);
+                const top3 = (r['Totalmente satisfecho'] || 0) + (r['Muy satisfecho'] || 0) + (r['Satisfecho'] || 0);
+                dims[r.dimension].total += total;
+                dims[r.dimension].top3 += top3;
+            });
+            
+            let allDims = Object.entries(dims)
+                .filter(([_, v]) => v.total > 0)
+                .map(([dim, v]) => ({ dim, pct: (v.top3 / v.total) * 100, categoria: v.categoria }));
+            
+            if (allDims.length === 0) {
+                $('radar-chart').innerHTML = '<text x="300" y="250" text-anchor="middle">Sin datos</text>';
+                return;
+            }
+            
+            // Ordenar de mayor a menor (espiral)
+            allDims.sort((a, b) => b.pct - a.pct);
+            
+            const svg = $('radar-chart');
+            const cx = 300, cy = 250, maxR = 200;
+            const n = allDims.length;
+            let html = '';
+            
+            [0.25, 0.5, 0.75, 1].forEach(f => {
+                html += `<circle cx="${cx}" cy="${cy}" r="${maxR * f}" fill="none" stroke="#E5E7EB" stroke-width="1"/>`;
+            });
+            
+            allDims.forEach((d, i) => {
+                const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+                const x2 = cx + maxR * Math.cos(angle);
+                const y2 = cy + maxR * Math.sin(angle);
+                html += `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#E5E7EB" stroke-width="1"/>`;
+                
+                const labelOffset = 26;
+                const lx = cx + (maxR + labelOffset) * Math.cos(angle);
+                const ly = cy + (maxR + labelOffset) * Math.sin(angle);
+                const anchor = angle > Math.PI / 2 || angle < -Math.PI / 2 ? 'end' : 'start';
+                
+                html += `<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
+                    dominant-baseline="middle" onmousemove="showTooltip(event, '${d.dim}')" onmouseleave="hideTooltip()">${cortarTexto(d.dim, 26)}</text>`;
+            });
+            
+            const points = allDims.map((d, i) => {
+                const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+                const r = (d.pct / 100) * maxR;
+                return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+            }).join(' ');
+            
+            html += `<polygon points="${points}" fill="rgba(55,65,81,0.18)" stroke="#374151" stroke-width="2"/>`;
+            
+            allDims.forEach((d, i) => {
+                const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+                const r = (d.pct / 100) * maxR;
+                const px = cx + r * Math.cos(angle);
+                const py = cy + r * Math.sin(angle);
+                const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
+                html += `<circle cx="${px}" cy="${py}" r="4" fill="${color}" style="cursor:pointer"
+                    onmousemove="showTooltip(event, '${d.dim}: ${d.pct.toFixed(2)}%')" onmouseleave="hideTooltip()"/>`;
+            });
+            
+            svg.innerHTML = html;
+        }
+        
+        // =========================================================
+        // PROGRESS BAR
+        // =========================================================
+        function setupProgressBar() {
+            window.addEventListener('scroll', () => {
+                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                $('progress-fill').style.width = (winScroll / height) * 100 + '%';
+            });
+        }
+        
+        // =========================================================
+        // INICIALIZACIÓN
+        // =========================================================
+        async function init() {
+            console.time('Dashboard Load');
+            
+            if (!await loadAllData()) {
+                console.error('Error cargando datos');
+                return;
+            }
+            
+            renderEjecutivo();
+            
+            setupFilters('top3', updateTop3Filters);
+            setupFilters('radar', renderRadarIndependiente);
+            setupFilters('preguntas', renderPreguntas);
+            setupFilters('detalle', renderDetalleCarreras);
+            setupFilters('visibilidad', renderVisibilidad);
+            
+            setupProgressBar();
+            
+            console.timeEnd('Dashboard Load');
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    })();
+    </script>
+</body>
+</html>
