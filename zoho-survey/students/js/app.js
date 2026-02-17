@@ -121,7 +121,7 @@
   }
   function renderEjecutivo() {
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
-    DOM.headerTitle.textContent = `Encuesta Satisfacción Estudiantil ${r.año}`;
+    DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
     DOM.footerPeriodo.textContent =
       `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
