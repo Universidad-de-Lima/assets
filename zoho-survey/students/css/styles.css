@@ -701,3 +701,10 @@ body {
 .splash img { max-width: 300px; }
 .main-wrapper { opacity: 0; transition: opacity 0.6s ease 0.2s; }
 .main-wrapper.visible { opacity: 1; }
+
+/* Forzar centrado en encabezados de tablas específicas */
+#tabla-preguntas th.text-center,
+#tabla-detalle th.text-center,
+#tabla-visibilidad th.text-center {
+  text-align: center !important;
+}
