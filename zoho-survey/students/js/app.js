@@ -88,7 +88,8 @@
   // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
-      return dim.replace('Software', '<i>Software</i>');
+      // Reemplazar "Software " (con espacio) para conservar el espacio después de la etiqueta
+      return dim.replace(/Software\s/, '<i>Software</i> ');
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
@@ -228,7 +229,6 @@
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
     DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
-    // Cambio aquí: se elimina el año y se usa mes completo
     DOM.footerPeriodo.textContent =
       `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} · Dirección de Planificación y Acreditación`;
 
