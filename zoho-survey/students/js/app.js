@@ -87,9 +87,9 @@
 
   // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
+    // Caso especial: Software especializado empleado en la carrera
     if (dim === 'Software especializado empleado en la carrera') {
-      // Reemplazar "Software " (con espacio) para conservar el espacio después de la etiqueta
-      return dim.replace(/Software\s/, '<i>Software</i> ');
+      return '<i>Software</i> especializado empleado en la carrera';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
