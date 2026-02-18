@@ -1,48 +1,7 @@
 (() => {
   'use strict';
 
-  // ========== NUEVAS FUNCIONES DE FORMATEO ==========
-  const formatInteger = (n) => n.toString(); // sin separadores de miles
-
-  const formatDecimal = (n, digits = 2) => {
-    if (n === null || n === undefined) return '';
-    // Si el número es entero después de redondear a 'digits' decimales, mostrar sin decimales
-    const rounded = n.toFixed(digits);
-    if (rounded.endsWith('0'.repeat(digits))) {
-      return Math.round(n).toString(); // parte entera
-    }
-    return rounded.replace('.', ',');
-  };
-
-  const formatPercent = (n, digits = 2) => {
-    const formatted = formatDecimal(n, digits);
-    return formatted + ' %';
-  };
-
-  // Para porcentajes calculados a partir de conteos
-  const formatPctSimple = (v, t) => {
-    if (t === 0) return '0 %';
-    return Math.round((v / t) * 100) + ' %';
-  };
-
-  const formatPctDecimal = (v, t) => {
-    if (t === 0) return '0,0 %';
-    const val = (v / t) * 100;
-    return formatDecimal(val, 1) + ' %'; // usamos 1 decimal para estos casos
-  };
-
-  // Formato para textos de ciclo en los selects con superíndices Unicode
-  const formatCicloText = (ciclo) => {
-    const match = ciclo.match(/^(\d+)/);
-    if (!match) return ciclo;
-    const num = match[1];
-    if (num === '1' || num === '3') {
-      return `${num}.ᵉʳ ciclo`; // 1.ᵉʳ ciclo, 3.ᵉʳ ciclo
-    }
-    return `${num}.º ciclo`; // 2.º ciclo, 4.º ciclo, etc.
-  };
-  // ===================================================
-
+  // ==================== CONSTANTES GLOBALES ====================
   const BASE_URL = 'https://Universidad-de-Lima.github.io/assets/zoho-survey/students/output';
   const META_NPS = 50;
   const META_CSAT = 93;
@@ -52,6 +11,8 @@
   const CICLOS_ESTUDIOS_GENERALES = ['1° Ciclo', '2° Ciclo'];
   const SAT_KEYS = ['Totalmente satisfecho', 'Muy satisfecho', 'Satisfecho', 'Insatisfecho', 'Totalmente insatisfecho'];
   const SAT_TOP3_KEYS = SAT_KEYS.slice(0, 3);
+
+  // ==================== CACHÉ DE DATOS ====================
   const cache = {
     dashboard: null,
     dimensiones: null,
@@ -62,6 +23,8 @@
     csat_carrera: null,
     filtros: null
   };
+
+  // ==================== REFERENCIAS AL DOM ====================
   const DOM = {
     tooltip:            document.getElementById('tooltip'),
     headerTitle:        document.getElementById('header-title'),
@@ -87,16 +50,53 @@
     detallePromedioRef: document.getElementById('detalle-promedio-ref'),
     progressFill:       document.getElementById('progress-fill')
   };
+
   let csatScoreGlobal = 0;
+
+  // ==================== FUNCIONES AUXILIARES ====================
   const $ = (id) => document.getElementById(id);
   const $$ = (sel) => document.querySelectorAll(sel);
+
+  // Formato de números
+  const formatInteger = (n) => n.toString(); // sin separadores de miles
+
+  const formatDecimal = (n, digits = 2) => {
+    if (n === null || n === undefined) return '';
+    const rounded = n.toFixed(digits);
+    if (rounded.endsWith('0'.repeat(digits))) {
+      return Math.round(n).toString();
+    }
+    return rounded.replace('.', ',');
+  };
+
+  const formatPercent = (n, digits = 2) => {
+    const formatted = formatDecimal(n, digits);
+    return formatted + ' %';
+  };
+
+  const formatPctSimple = (v, t) => {
+    if (t === 0) return '0 %';
+    return Math.round((v / t) * 100) + ' %';
+  };
+
+  const formatPctDecimal = (v, t) => {
+    if (t === 0) return '0,0 %';
+    const val = (v / t) * 100;
+    return formatDecimal(val, 1) + ' %';
+  };
+
+  // Fechas
   const formatDate = (ds) =>
     new Date(`${ds}T12:00:00`).toLocaleDateString('es-PE', { day: 'numeric', month: 'short' });
+
+  // Cálculos simples
   const pct = (v, t) => t > 0 ? Math.round((v / t) * 100) : 0;
   const pct2 = (v, t) => t > 0 ? ((v / t) * 100).toFixed(1) : '0.0';
   const esEstudiosGenerales = (facultad) => facultad === PROGRAMA_ESTUDIOS_GENERALES;
   const cortarTexto = (texto, max) => texto.length > max ? `${texto.slice(0, max - 1)}…` : texto;
   const sumKeys = (row, keys) => keys.reduce((acc, k) => acc + (row[k] || 0), 0);
+
+  // Filtrado de datos
   function filtrarDatos(datos, fac, car, cic) {
     return datos.filter(r => {
       if (esEstudiosGenerales(fac)) {
@@ -109,12 +109,16 @@
              (!cic || r.ciclo === cic);
     });
   }
+
   function getCiclosForFiltro(facultad, carrera) {
     if (esEstudiosGenerales(facultad)) return CICLOS_ESTUDIOS_GENERALES;
     const maxCiclo = (FACULTADES_12_CICLOS.includes(facultad) || CARRERAS_12_CICLOS.includes(carrera)) ? 12 : 10;
     return cache.filtros.ciclos.filter(c => (parseInt(c) || 0) <= maxCiclo);
   }
+
   const ordenarFacultades = (lista) => [PROGRAMA_ESTUDIOS_GENERALES, ...lista.sort()];
+
+  // Tooltips
   const showTooltip = (e, content) => {
     const { tooltip } = DOM;
     tooltip.innerHTML = content;
@@ -122,11 +126,14 @@
     tooltip.style.left = `${e.pageX + 10}px`;
     tooltip.style.top = `${e.pageY - 10}px`;
   };
+
   const hideTooltip = () => {
     DOM.tooltip.style.display = 'none';
   };
+
   window.showTooltip = showTooltip;
   window.hideTooltip = hideTooltip;
+
   function addTooltipToSegments(selector) {
     $$(selector).forEach(seg => {
       seg.addEventListener('mousemove', (e) =>
@@ -135,6 +142,32 @@
       seg.addEventListener('mouseleave', hideTooltip);
     });
   }
+
+  // Formato para textos de ciclo en selects (con superíndices)
+  const formatCicloText = (ciclo) => {
+    const match = ciclo.match(/^(\d+)/);
+    if (!match) return ciclo;
+    const num = match[1];
+    if (num === '1' || num === '3') {
+      return `${num}.ᵉʳ ciclo`;
+    }
+    return `${num}.º ciclo`;
+  };
+
+  // Poblado de selects con opciones personalizadas
+  function populateSelect(sel, placeholder, items, texts) {
+    const current = sel.value;
+    sel.innerHTML = `<option value="">${placeholder}</option>`;
+    items.forEach((item, index) => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      opt.textContent = texts ? texts[index] : item;
+      sel.appendChild(opt);
+    });
+    if (items.includes(current)) sel.value = current;
+  }
+
+  // ==================== CARGA DE DATOS ====================
   async function loadAllData() {
     try {
       const endpoints = [
@@ -161,23 +194,31 @@
       return false;
     }
   }
+
+  // ==================== SECCIÓN EJECUTIVO ====================
   function renderEjecutivo() {
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
     DOM.headerTitle.textContent = `Encuesta Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
     DOM.footerPeriodo.textContent =
       `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
+
+    // KPIs
     DOM.kpiNpsValue.textContent = formatDecimal(r.nps.score);
     DOM.kpiNpsBar.style.width = `${Math.min(100, Math.max(0, r.nps.score))}%`;
     DOM.kpiNpsMeta.textContent = `Meta ${formatInteger(META_NPS)}`;
+
     DOM.kpiCsatValue.textContent = formatPercent(r.csat.score);
     DOM.kpiCsatBar.style.width = `${r.csat.score}%`;
     DOM.kpiCsatMeta.textContent = `Meta ${formatPercent(META_CSAT)}`;
+
     DOM.kpiDiasValue.textContent = formatInteger(r.dias_recoleccion);
     DOM.kpiDiasBar.style.width = `${(r.dias_recoleccion / r.dias) * 100}%`;
     DOM.kpiDiasMeta.textContent = `${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año}`;
+
     renderNPSBar(nps);
     renderCSATBar(csat);
+
     const { nps_etapas: etapas } = h;
     DOM.insightHallazgos.innerHTML = `
       Actualmente <strong>+${formatInteger(h.csat_pct)} %</strong> de estudiantes están satisfechos con la Universidad de Lima.
@@ -190,6 +231,7 @@
       Teniendo una diferencia de <strong>-${formatInteger(h.delta)}</strong> puntos en el ciclo de vida estudiantil.
     `;
   }
+
   function renderNPSBar(nps) {
     const total = nps.Promotores + nps.Pasivos + nps.Detractores;
     DOM.npsBar.innerHTML = `
@@ -207,6 +249,7 @@
     `;
     addTooltipToSegments('#nps-bar .csat-segment');
   }
+
   function renderCSATBar(csat) {
     const labels = [
       { key: 'Totalmente satisfecho', color: 'var(--gray-900)' },
@@ -227,9 +270,13 @@
     ).join('');
     addTooltipToSegments('#csat-bar .csat-segment');
   }
+
+  // ==================== SECCIÓN OPERATIVO ====================
+  // Funciones para los gráficos de barras (Top 3 Box)
   function dimensionAplica(rows, dimension) {
     return rows.some(r => r.dimension === dimension && sumKeys(r, SAT_KEYS) > 0);
   }
+
   function excluirCondicionesLaboratorio(rows) {
     const tieneNoUso = rows.some(r =>
       r.dimension === 'Equipamiento tecnológico en laboratorios' &&
@@ -237,6 +284,7 @@
     );
     return tieneNoUso ? 'Condiciones ambientales en laboratorios' : null;
   }
+
   function renderTop3Bars(containerId, data) {
     const container = $(containerId);
     const fragment = document.createDocumentFragment();
@@ -244,7 +292,6 @@
       const barClass = item.pct >= 90 ? 'high' : item.pct >= 80 ? 'medium' : 'low';
       const barItem = document.createElement('div');
       barItem.className = 'bar-item';
-      // Formatear el porcentaje de la barra con dos decimales
       const pctFormatted = formatPercent(item.pct, 2);
       barItem.innerHTML = `
         <div class="bar-label">${item.dim}</div>
@@ -275,6 +322,7 @@
     container.innerHTML = '';
     container.appendChild(fragment);
   }
+
   function updateTop3Filters() {
     const fac = $('filter-facultad-top3').value;
     const car = $('filter-carrera-top3').value;
@@ -308,6 +356,8 @@
     renderTop3Bars('chart-tecnologia', top3Data.tecnologia);
     renderTop3Bars('chart-admin-bienestar', top3Data.adminBienestar);
   }
+
+  // Funciones para el gráfico radar
   function renderRadarIndependiente() {
     const fac = $('filter-facultad-radar').value;
     const car = $('filter-carrera-radar').value;
@@ -385,6 +435,7 @@
     }, 10);
     updateInsightFortaleza(allDims, fac, car, cic);
   }
+
   function updateInsightFortaleza(allDims, fac, car, cic) {
     if (!DOM.insightFortaleza || allDims.length === 0) {
       if (DOM.insightFortaleza) DOM.insightFortaleza.innerHTML = 'Sin datos suficientes para el análisis.';
@@ -432,6 +483,9 @@
     }
     DOM.insightFortaleza.innerHTML = narrativa;
   }
+
+  // ==================== SECCIÓN ANALÍTICO ====================
+  // Tabla de preguntas detalladas
   function renderPreguntas() {
     const fac = $('filter-facultad-preguntas').value;
     const car = $('filter-carrera-preguntas').value;
@@ -458,7 +512,7 @@
       const p5 = total > 0 ? Math.max(0, 100 - p1 - p2 - p3 - p4)  : 0;
       return {
         dimension: dim, categoria: v.categoria,
-        top3box: total > 0 ? ((top3 / total) * 100).toFixed(2) : '0.00', // siempre dos decimales
+        top3box: total > 0 ? ((top3 / total) * 100).toFixed(2) : '0.00',
         totSat: v.totSat, muySat: v.muySat, sat: v.sat, insat: v.insat, totInsat: v.totInsat,
         total, pctTotSat: p1, pctMuySat: p2, pctSat: p3, pctInsat: p4, pctTotInsat: p5
       };
@@ -495,6 +549,8 @@
     tbody.innerHTML = '';
     tbody.appendChild(fragment);
   }
+
+  // Tabla de detalle por carrera
   function renderDetalleCarreras() {
     const fac = $('filter-facultad-detalle').value;
     const cic = $('filter-ciclo-detalle').value;
@@ -550,6 +606,8 @@
     tbody.innerHTML = '';
     tbody.appendChild(fragment);
   }
+
+  // Tabla de visibilidad de servicios
   function renderVisibilidad() {
     const fac = $('filter-facultad-visibilidad').value;
     const car = $('filter-carrera-visibilidad').value;
@@ -607,6 +665,7 @@
     tbody.appendChild(fragment);
     updateInsightAtencion(data, fac, car, cic);
   }
+
   function updateInsightAtencion(data, fac, car, cic) {
     if (!DOM.insightAtencion || data.length === 0) {
       if (DOM.insightAtencion) DOM.insightAtencion.innerHTML = 'Sin datos suficientes para el análisis.';
@@ -656,17 +715,8 @@
     }
     DOM.insightAtencion.innerHTML = narrativa;
   }
-  function populateSelect(sel, placeholder, items, texts) {
-    const current = sel.value;
-    sel.innerHTML = `<option value="">${placeholder}</option>`;
-    items.forEach((item, index) => {
-      const opt = document.createElement('option');
-      opt.value = item;
-      opt.textContent = texts ? texts[index] : item;
-      sel.appendChild(opt);
-    });
-    if (items.includes(current)) sel.value = current;
-  }
+
+  // ==================== CONFIGURACIÓN DE FILTROS ====================
   function setupFilters(prefix, onChangeCallback) {
     const selFac = $(`filter-facultad-${prefix}`);
     const selCar = $(`filter-carrera-${prefix}`);
@@ -725,6 +775,8 @@
     });
     updateCascade();
   }
+
+  // ==================== BARRA DE PROGRESO ====================
   function setupProgressBar() {
     let ticking = false;
     window.addEventListener('scroll', () => {
@@ -737,8 +789,10 @@
         });
         ticking = true;
       }
-    }, { passive: true }); 
+    }, { passive: true });
   }
+
+  // ==================== INICIALIZACIÓN ====================
   async function init() {
     if (!await loadAllData()) {
       console.error('No se pudieron cargar los datos. La aplicación no continuará.');
@@ -752,6 +806,7 @@
     setupFilters('visibilidad', renderVisibilidad);
     setupProgressBar();
   }
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
