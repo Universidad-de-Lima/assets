@@ -57,12 +57,6 @@
   const $ = (id) => document.getElementById(id);
   const $$ = (sel) => document.querySelectorAll(sel);
 
-  // Convierte una cadena a sentence case (primera letra mayúscula, resto minúsculas)
-  const toSentenceCase = (str) => {
-    if (!str) return str;
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  };
-
   // Formato de números
   const formatInteger = (n) => n.toString();
 
@@ -152,16 +146,9 @@
 
   const ordenarFacultades = (lista) => [PROGRAMA_ESTUDIOS_GENERALES, ...lista.sort()];
 
-  // Tooltips
+  // Tooltips (sin transformación automática)
   const showTooltip = (e, content) => {
     const { tooltip } = DOM;
-    // Transformar la parte de la etiqueta a sentence case si tiene formato "Etiqueta: valor"
-    const colonIndex = content.indexOf(':');
-    if (colonIndex !== -1) {
-      const label = content.substring(0, colonIndex);
-      const value = content.substring(colonIndex);
-      content = toSentenceCase(label) + value;
-    }
     tooltip.innerHTML = content;
     tooltip.style.display = 'block';
     tooltip.style.left = `${e.pageX + 10}px`;
