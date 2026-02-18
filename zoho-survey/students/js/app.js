@@ -42,7 +42,7 @@
     npsBar:             document.getElementById('nps-bar'),
     npsLegend:          document.getElementById('nps-legend'),
     csatBar:            document.getElementById('csat-bar'),
-    csatLegend:         document.getElementById('csat-legend'),
+    csatLegend:          document.getElementById('csat-legend'),
     insightHallazgos:   document.getElementById('insight-hallazgos'),
     insightFortaleza:   document.getElementById('insight-fortaleza'),
     insightAtencion:    document.getElementById('insight-atencion'),
@@ -58,7 +58,7 @@
   const $$ = (sel) => document.querySelectorAll(sel);
 
   // Formato de números
-  const formatInteger = (n) => n.toString(); // sin separadores de miles
+  const formatInteger = (n) => n.toString();
 
   const formatDecimal = (n, digits = 2) => {
     if (n === null || n === undefined) return '';
@@ -83,6 +83,20 @@
     if (t === 0) return '0,0 %';
     const val = (v / t) * 100;
     return formatDecimal(val, 1) + ' %';
+  };
+
+  // Formato de nombre de dimensión
+  const formatDimensionName = (dim) => {
+    if (dim === 'Software especializado empleado en la carrera') {
+      return dim.replace('Software', '<i>Software</i>');
+    }
+    if (dim === 'Portal web de la Universidad (MiUlima)') {
+      return 'Portal web de la Universidad (Mi Ulima)';
+    }
+    if (dim === 'Conexión WiFi en el campus') {
+      return 'Conexión Wi-Fi en el campus';
+    }
+    return dim;
   };
 
   // Fechas
@@ -198,7 +212,8 @@
   // ==================== SECCIÓN EJECUTIVO ====================
   function renderEjecutivo() {
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
-    DOM.headerTitle.textContent = `Encuesta Satisfacción Estudiantil ${r.año}`;
+    // Cambio en el título: agregar "DE"
+    DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
     DOM.footerPeriodo.textContent =
       `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
@@ -293,8 +308,10 @@
       const barItem = document.createElement('div');
       barItem.className = 'bar-item';
       const pctFormatted = formatPercent(item.pct, 2);
+      // Aplicar formato al nombre de la dimensión
+      const dimFormatted = formatDimensionName(item.dim);
       barItem.innerHTML = `
-        <div class="bar-label">${item.dim}</div>
+        <div class="bar-label">${dimFormatted}</div>
         <div class="bar-container">
           <div class="bar-fill animated ${barClass}" style="width:${item.pct}%; animation-delay:${idx * 0.08}s">
             <span class="bar-value">${pctFormatted}</span>
@@ -396,8 +413,10 @@
       const lx = cx + (maxR + labelOffset) * Math.cos(angle);
       const ly = cy + (maxR + labelOffset) * Math.sin(angle);
       const anchor = (angle > Math.PI / 2 || angle < -Math.PI / 2) ? 'end' : 'start';
+      // Aplicar formato al nombre de la dimensión en la etiqueta del radar
+      const dimFormatted = formatDimensionName(d.dim);
       svgParts.push(`<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
-                dominant-baseline="middle" onmousemove="showTooltip(event, '${d.dim}')" onmouseleave="hideTooltip()">${cortarTexto(d.dim, 26)}</text>`);
+                dominant-baseline="middle" onmousemove="showTooltip(event, '${d.dim}')" onmouseleave="hideTooltip()">${cortarTexto(dimFormatted.replace(/<[^>]*>/g, ''), 26)}</text>`);
     });
     const outerPoints = allDims.map((d, i) => {
       const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
@@ -420,8 +439,10 @@
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
+      // En el tooltip también mostramos el nombre formateado (sin HTML)
+      const dimTooltip = d.dim === 'Software especializado empleado en la carrera' ? 'Software especializado empleado en la carrera' : d.dim;
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
-                onmousemove="showTooltip(event, '${d.dim}: ${pctFormatted}')" onmouseleave="hideTooltip()">
+                onmousemove="showTooltip(event, '${dimTooltip}: ${pctFormatted}')" onmouseleave="hideTooltip()">
                 <animate attributeName="cx" from="${ox}" to="${px}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
                 <animate attributeName="cy" from="${oy}" to="${py}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
                 <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.5s" fill="freeze"/>
@@ -448,36 +469,38 @@
     const contexto   = hayFiltro ? [fac, car, cic].filter(Boolean).join(' · ') : '';
     let narrativa    = '';
     const fmtPct = (val) => formatPercent(val, 2);
+    // Función para formatear nombre en insights (con HTML)
+    const fmtDim = (dim) => formatDimensionName(dim);
     if (hayFiltro) {
       narrativa += `<strong style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${contexto}</strong><br>`;
       if (fortalezas.length > 0) {
         const top = fortalezas.slice(0, 3);
         narrativa += `${fortalezas.length === 1 ? 'La dimensión mejor evaluada es' : 'Las dimensiones mejor evaluadas son'} `;
-        narrativa += top.map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(', ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(', ');
         narrativa += `. En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones superan el 90% de satisfacción.`;
       } else {
         narrativa += `Ninguna dimensión alcanza el umbral de <strong>90%</strong> (Fortaleza). `;
         if (adecuados.length > 0) {
           const topAd = adecuados.slice(0, 2);
-          narrativa += `Las más cercanas son ${topAd.map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ')}.`;
+          narrativa += `Las más cercanas son ${topAd.map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ')}.`;
         }
       }
       if (atencion.length > 0) {
         narrativa += ` ${atencion.length === 1 ? 'Requiere' : 'Requieren'} atención: `;
-        narrativa += atencion.slice(0, 2).map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ');
+        narrativa += atencion.slice(0, 2).map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ');
         narrativa += ` por estar debajo del 80%.`;
       }
     } else {
       if (fortalezas.length > 0) {
         const top = fortalezas.slice(0, 2);
-        narrativa += `La satisfacción en ${top.map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ')} son las mejor evaluadas. `;
+        narrativa += `La satisfacción en ${top.map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ')} son las mejor evaluadas. `;
         narrativa += `En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones se encuentran en rango de Fortaleza (≥90%).`;
       } else {
         narrativa += `Actualmente ninguna dimensión alcanza el umbral de <strong>90%</strong> (Fortaleza).`;
       }
       if (atencion.length > 0) {
         narrativa += ` ${atencion.length === 1 ? 'La dimensión' : 'Las dimensiones'} `;
-        narrativa += atencion.slice(0, 2).map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ');
+        narrativa += atencion.slice(0, 2).map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ');
         narrativa += ` ${atencion.length === 1 ? 'requiere' : 'requieren'} atención prioritaria.`;
       }
     }
@@ -524,8 +547,10 @@
       const catCorta = item.categoria === 'Administrativo y Bienestar' ? 'Bienestar' : item.categoria;
       const heatClass = parseFloat(item.top3box) >= 90 ? 'heat-high' : parseFloat(item.top3box) >= 80 ? 'heat-medium' : 'heat-low';
       const top3boxFormatted = formatPercent(parseFloat(item.top3box), 2);
+      // Aplicar formato al nombre de la dimensión en la primera columna
+      const dimFormatted = formatDimensionName(item.dimension);
       tr.innerHTML = `
-        <td>${item.dimension}</td>
+        <td>${dimFormatted}</td>
         <td class="text-center"><span class="heatmap-cell ${heatClass}">${top3boxFormatted}</span></td>
         <td class="text-center">${catCorta}</td>
         <td>
@@ -641,8 +666,10 @@
     const fmtVisibilidad = v => v < 6.5 ? '' : formatDecimal(v, 2) + ' %';
     data.forEach(item => {
       const tr = document.createElement('tr');
+      // Aplicar formato al nombre de la dimensión en la primera columna
+      const dimFormatted = formatDimensionName(item.dimension);
       tr.innerHTML = `
-        <td>${item.dimension}</td>
+        <td>${dimFormatted}</td>
         <td class="text-center">${formatInteger(item.noConozco)} (${formatDecimal(item.pctNoConozco, 2)} %)</td>
         <td class="text-center">${formatInteger(item.noUtilizo)} (${formatDecimal(item.pctNoUtilizo, 2)} %)</td>
         <td>
@@ -681,36 +708,37 @@
     const contexto  = hayFiltro ? [fac, car, cic].filter(Boolean).join(' · ') : '';
     let narrativa   = '';
     const fmtPct = (val) => formatDecimal(val, 2) + ' %';
+    const fmtDim = (dim) => formatDimensionName(dim);
     if (hayFiltro) {
       narrativa += `<strong style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${contexto}</strong><br>`;
       if (criticos.length > 0) {
         const top = criticos.slice(0, 3);
         narrativa += `${criticos.length === 1 ? 'El servicio con menor visibilidad es' : 'Los servicios con menor visibilidad son'} `;
-        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(', ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(', ');
         narrativa += `. En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones tienen más del 50% de desconocimiento o no uso.`;
       } else if (moderados.length > 0) {
         const top = moderados.slice(0, 2);
         narrativa += `No hay servicios con desconocimiento crítico (>50%). Las dimensiones con mayor oportunidad son `;
-        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
         narrativa += `.`;
       } else {
         const top = sorted.slice(0, 2);
         narrativa += `Los servicios presentan niveles aceptables de visibilidad. Las dimensiones con mayor margen de mejora son `;
-        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
         narrativa += `.`;
       }
     } else {
       if (sorted.length >= 2) {
         const [lowest, secondLowest] = sorted;
-        narrativa += `<strong>${lowest.dimension} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> y `;
-        narrativa += `<strong>${secondLowest.dimension} (${fmtPct(secondLowest.pctNoConozco)} No Conozco + ${fmtPct(secondLowest.pctNoUtilizo)} No Utilizo)</strong> `;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> y `;
+        narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} No Conozco + ${fmtPct(secondLowest.pctNoUtilizo)} No Utilizo)</strong> `;
         narrativa += `son las que presentan menor visibilidad.`;
         if (criticos.length > 0) {
           narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50% de desconocimiento o no uso.`;
         }
       } else if (sorted.length === 1) {
         const [lowest] = sorted;
-        narrativa += `<strong>${lowest.dimension} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> es la que presenta menor visibilidad.`;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> es la que presenta menor visibilidad.`;
       }
     }
     DOM.insightAtencion.innerHTML = narrativa;
