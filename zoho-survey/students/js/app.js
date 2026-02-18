@@ -528,7 +528,7 @@
     data.forEach(item => {
       const tr = document.createElement('tr');
       const catCorta = item.categoria === 'Administrativo y Bienestar' ? 'Servicios' : item.categoria;
-      const heatClass = parseFloat(item.top3box) >= META_CSAT ? 'heat-high' : parseFloat(item.top3box) >= 80 ? 'heat-medium' : 'heat-low';
+      const heatClass = parseFloat(item.top3box) >= META_CSAT ? 'heat-high' : parseFloat(item.top3box) >= 85 ? 'heat-medium' : 'heat-low';
       const top3boxFormatted = formatPercent(parseFloat(item.top3box), 2);
       const dimFormatted = formatDimensionName(item.dimension);
       tr.innerHTML = `
