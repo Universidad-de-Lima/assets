@@ -85,10 +85,24 @@
     return formatDecimal(val, 1) + ' %';
   };
 
-  // Formato de nombre de dimensión
+  // Formato de nombre de dimensión (con HTML para visualización)
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
       return dim.replace('Software', '<i>Software</i>');
+    }
+    if (dim === 'Portal web de la Universidad (MiUlima)') {
+      return 'Portal web de la Universidad (Mi Ulima)';
+    }
+    if (dim === 'Conexión WiFi en el campus') {
+      return 'Conexión Wi-Fi en el campus';
+    }
+    return dim;
+  };
+
+  // Versión sin HTML para tooltips
+  const formatDimensionNamePlain = (dim) => {
+    if (dim === 'Software especializado empleado en la carrera') {
+      return 'Software especializado empleado en la carrera';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
@@ -423,7 +437,8 @@
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
-      const dimTooltip = d.dim === 'Software especializado empleado en la carrera' ? 'Software especializado empleado en la carrera' : d.dim;
+      // Usar formato plano para el tooltip
+      const dimTooltip = formatDimensionNamePlain(d.dim);
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
                 onmousemove="showTooltip(event, '${dimTooltip}: ${pctFormatted}')" onmouseleave="hideTooltip()">
                 <animate attributeName="cx" from="${ox}" to="${px}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
