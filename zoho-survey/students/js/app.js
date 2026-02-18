@@ -42,7 +42,7 @@
     npsBar:             document.getElementById('nps-bar'),
     npsLegend:          document.getElementById('nps-legend'),
     csatBar:            document.getElementById('csat-bar'),
-    csatLegend:          document.getElementById('csat-legend'),
+    csatLegend:         document.getElementById('csat-legend'),
     insightHallazgos:   document.getElementById('insight-hallazgos'),
     insightFortaleza:   document.getElementById('insight-fortaleza'),
     insightAtencion:    document.getElementById('insight-atencion'),
@@ -56,6 +56,12 @@
   // ==================== FUNCIONES AUXILIARES ====================
   const $ = (id) => document.getElementById(id);
   const $$ = (sel) => document.querySelectorAll(sel);
+
+  // Convierte una cadena a sentence case (primera letra mayúscula, resto minúsculas)
+  const toSentenceCase = (str) => {
+    if (!str) return str;
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  };
 
   // Formato de números
   const formatInteger = (n) => n.toString();
@@ -85,7 +91,7 @@
     return formatDecimal(val, 1) + ' %';
   };
 
-  // Formato de nombre de dimensión (con HTML para visualización)
+  // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
       return dim.replace('Software', '<i>Software</i>');
@@ -149,6 +155,13 @@
   // Tooltips
   const showTooltip = (e, content) => {
     const { tooltip } = DOM;
+    // Transformar la parte de la etiqueta a sentence case si tiene formato "Etiqueta: valor"
+    const colonIndex = content.indexOf(':');
+    if (colonIndex !== -1) {
+      const label = content.substring(0, colonIndex);
+      const value = content.substring(colonIndex);
+      content = toSentenceCase(label) + value;
+    }
     tooltip.innerHTML = content;
     tooltip.style.display = 'block';
     tooltip.style.left = `${e.pageX + 10}px`;
@@ -299,11 +312,11 @@
   }
 
   // ==================== SECCIÓN OPERATIVO ====================
-  // Funciones para los gráficos de barras (Top 3 Box)
   function dimensionAplica(rows, dimension) {
     return rows.some(r => r.dimension === dimension && sumKeys(r, SAT_KEYS) > 0);
   }
 
+  // Gráficos de barras Top 3
   function renderTop3Bars(containerId, data) {
     const container = $(containerId);
     const fragment = document.createDocumentFragment();
@@ -375,7 +388,7 @@
     renderTop3Bars('chart-admin-bienestar', top3Data.adminBienestar);
   }
 
-  // Funciones para el gráfico radar
+  // Gráfico radar
   function renderRadarIndependiente() {
     const fac = $('filter-facultad-radar').value;
     const car = $('filter-carrera-radar').value;
@@ -437,7 +450,6 @@
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
-      // Usar formato plano para el tooltip
       const dimTooltip = formatDimensionNamePlain(d.dim);
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
                 onmousemove="showTooltip(event, '${dimTooltip}: ${pctFormatted}')" onmouseleave="hideTooltip()">
@@ -551,11 +563,11 @@
         <td class="text-center">${catCorta}</td>
         <td>
           <div class="distribution-bar animated">
-            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente Satisfecho" data-value="${formatInteger(item.totSat)}">${item.pctTotSat < 3 ? '' : formatInteger(item.pctTotSat) + ' %'}</div>
-            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy Satisfecho" data-value="${formatInteger(item.muySat)}">${item.pctMuySat < 3 ? '' : formatInteger(item.pctMuySat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente satisfecho" data-value="${formatInteger(item.totSat)}">${item.pctTotSat < 3 ? '' : formatInteger(item.pctTotSat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy satisfecho" data-value="${formatInteger(item.muySat)}">${item.pctMuySat < 3 ? '' : formatInteger(item.pctMuySat) + ' %'}</div>
             <div class="distribution-segment" style="width:${item.pctSat}%; background: var(--gray-300); color: var(--gray-700);" data-label="Satisfecho" data-value="${formatInteger(item.sat)}">${item.pctSat < 3 ? '' : formatInteger(item.pctSat) + ' %'}</div>
             <div class="distribution-segment" style="width:${item.pctInsat}%; background: var(--ulima-orange);" data-label="Insatisfecho" data-value="${formatInteger(item.insat)}">${item.pctInsat < 3 ? '' : formatInteger(item.pctInsat) + ' %'}</div>
-            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente Insatisfecho" data-value="${formatInteger(item.totInsat)}">${item.pctTotInsat < 3 ? '' : formatInteger(item.pctTotInsat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente insatisfecho" data-value="${formatInteger(item.totInsat)}">${item.pctTotInsat < 3 ? '' : formatInteger(item.pctTotInsat) + ' %'}</div>
           </div>
         </td>
       `;
@@ -669,8 +681,8 @@
         <td class="text-center">${formatInteger(item.noUtilizo)} (${formatDecimal(item.pctNoUtilizo, 2)} %)</td>
         <td>
           <div class="visibility-bar animated">
-            <div class="visibility-segment no-conozco" style="width:${item.pctNoConozco}%;" data-label="No Conozco" data-value="${formatInteger(item.noConozco)}">${fmtVisibilidad(item.pctNoConozco)}</div>
-            <div class="visibility-segment no-utilizo" style="width:${item.pctNoUtilizo}%;" data-label="No Utilizo" data-value="${formatInteger(item.noUtilizo)}">${fmtVisibilidad(item.pctNoUtilizo)}</div>
+            <div class="visibility-segment no-conozco" style="width:${item.pctNoConozco}%;" data-label="No conozco" data-value="${formatInteger(item.noConozco)}">${fmtVisibilidad(item.pctNoConozco)}</div>
+            <div class="visibility-segment no-utilizo" style="width:${item.pctNoUtilizo}%;" data-label="No utilizo" data-value="${formatInteger(item.noUtilizo)}">${fmtVisibilidad(item.pctNoUtilizo)}</div>
             <div class="visibility-segment conocido" style="width:${item.pctConoce}%;" data-label="Conoce/Utiliza" data-value="${formatInteger(item.conoce)}">${fmtVisibilidad(item.pctConoce)}</div>
           </div>
         </td>
@@ -709,31 +721,31 @@
       if (criticos.length > 0) {
         const top = criticos.slice(0, 3);
         narrativa += `${criticos.length === 1 ? 'El servicio con menor visibilidad es' : 'Los servicios con menor visibilidad son'} `;
-        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(', ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No conozco + ${fmtPct(d.pctNoUtilizo)} No utilizo)`).join(', ');
         narrativa += `. En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones tienen más del 50% de desconocimiento o no uso.`;
       } else if (moderados.length > 0) {
         const top = moderados.slice(0, 2);
         narrativa += `No hay servicios con desconocimiento crítico (>50%). Las dimensiones con mayor oportunidad son `;
-        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No conozco + ${fmtPct(d.pctNoUtilizo)} No utilizo)`).join(' y ');
         narrativa += `.`;
       } else {
         const top = sorted.slice(0, 2);
         narrativa += `Los servicios presentan niveles aceptables de visibilidad. Las dimensiones con mayor margen de mejora son `;
-        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No conozco + ${fmtPct(d.pctNoUtilizo)} No utilizo)`).join(' y ');
         narrativa += `.`;
       }
     } else {
       if (sorted.length >= 2) {
         const [lowest, secondLowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> y `;
-        narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} No Conozco + ${fmtPct(secondLowest.pctNoUtilizo)} No Utilizo)</strong> `;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No conozco + ${fmtPct(lowest.pctNoUtilizo)} No utilizo)</strong> y `;
+        narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} No conozco + ${fmtPct(secondLowest.pctNoUtilizo)} No utilizo)</strong> `;
         narrativa += `son las que presentan menor visibilidad.`;
         if (criticos.length > 0) {
           narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50% de desconocimiento o no uso.`;
         }
       } else if (sorted.length === 1) {
         const [lowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> es la que presenta menor visibilidad.`;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No conozco + ${fmtPct(lowest.pctNoUtilizo)} No utilizo)</strong> es la que presenta menor visibilidad.`;
       }
     }
     DOM.insightAtencion.innerHTML = narrativa;
