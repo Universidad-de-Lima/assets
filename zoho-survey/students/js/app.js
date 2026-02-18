@@ -89,7 +89,7 @@
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
       // Usamos etiqueta <i> para cursiva, evitando problemas de copiado
-      return '<i>Software</i> especializado empleado en la carrera';
+      return '<span><i>Software</i> especializado empleado en la carrera</span>';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
