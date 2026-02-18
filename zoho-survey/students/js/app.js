@@ -1,5 +1,41 @@
 (() => {
   'use strict';
+
+  // ========== NUEVAS FUNCIONES DE FORMATEO ==========
+  const formatInteger = (n) => n.toString(); // sin separadores de miles
+
+  const formatDecimal = (n, digits = 2) => {
+    if (n === null || n === undefined) return '';
+    return n.toFixed(digits).replace('.', ',');
+  };
+
+  const formatPercent = (n, digits = 2) => {
+    return formatDecimal(n, digits) + ' %';
+  };
+
+  // Para porcentajes calculados a partir de conteos
+  const formatPctSimple = (v, t) => {
+    if (t === 0) return '0 %';
+    return Math.round((v / t) * 100) + ' %';
+  };
+
+  const formatPctDecimal = (v, t) => {
+    if (t === 0) return '0,0 %';
+    return ((v / t) * 100).toFixed(1).replace('.', ',') + ' %';
+  };
+
+  // Formato para textos de ciclo en los selects
+  const formatCicloText = (ciclo) => {
+    const match = ciclo.match(/^(\d+)/);
+    if (!match) return ciclo;
+    const num = match[1];
+    if (num === '1' || num === '3') {
+      return `${num}.er ciclo`; // 1.er ciclo, 3.er ciclo
+    }
+    return `${num}.° ciclo`; // 2.° ciclo, 4.° ciclo, etc.
+  };
+  // ===================================================
+
   const BASE_URL = 'https://Universidad-de-Lima.github.io/assets/zoho-survey/students/output';
   const META_NPS = 50;
   const META_CSAT = 93;
@@ -49,7 +85,7 @@
   const $$ = (sel) => document.querySelectorAll(sel);
   const formatDate = (ds) =>
     new Date(`${ds}T12:00:00`).toLocaleDateString('es-PE', { day: 'numeric', month: 'short' });
-  const formatNumber = (n) => n.toLocaleString('es-PE');
+  // Eliminamos formatNumber anterior, usaremos formatInteger
   const pct = (v, t) => t > 0 ? Math.round((v / t) * 100) : 0;
   const pct2 = (v, t) => t > 0 ? ((v / t) * 100).toFixed(1) : '0.0';
   const esEstudiosGenerales = (facultad) => facultad === PROGRAMA_ESTUDIOS_GENERALES;
@@ -121,47 +157,51 @@
   }
   function renderEjecutivo() {
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
-    DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
+    DOM.headerTitle.textContent = `Encuesta Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
     DOM.footerPeriodo.textContent =
       `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
-    DOM.kpiNpsValue.textContent = r.nps.score;
+    // NPS: con dos decimales y coma
+    DOM.kpiNpsValue.textContent = formatDecimal(r.nps.score);
     DOM.kpiNpsBar.style.width = `${Math.min(100, Math.max(0, r.nps.score))}%`;
-    DOM.kpiNpsMeta.textContent = `Meta ${META_NPS}`;
-    DOM.kpiCsatValue.textContent = `${r.csat.score}%`;
+    DOM.kpiNpsMeta.textContent = `Meta ${formatInteger(META_NPS)}`;
+    // CSAT: porcentaje con espacio
+    DOM.kpiCsatValue.textContent = formatPercent(r.csat.score);
     DOM.kpiCsatBar.style.width = `${r.csat.score}%`;
-    DOM.kpiCsatMeta.textContent = `Meta ${META_CSAT}%`;
-    DOM.kpiDiasValue.textContent = r.dias_recoleccion;
+    DOM.kpiCsatMeta.textContent = `Meta ${formatPercent(META_CSAT)}`;
+    // Días: entero sin formato
+    DOM.kpiDiasValue.textContent = formatInteger(r.dias_recoleccion);
     DOM.kpiDiasBar.style.width = `${(r.dias_recoleccion / r.dias) * 100}%`;
     DOM.kpiDiasMeta.textContent = `${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año}`;
     renderNPSBar(nps);
     renderCSATBar(csat);
     const { nps_etapas: etapas } = h;
+    // Ajustar el texto de hallazgos con los nuevos formatos
     DOM.insightHallazgos.innerHTML = `
-      Actualmente <strong>+${h.csat_pct}%</strong> de estudiantes están satisfechos con la Universidad de Lima.
-      El Índice de Promotores Netos que es de <strong>+${h.nps_score}</strong>, posiciona a la institución en el rango
+      Actualmente <strong>+${formatInteger(h.csat_pct)} %</strong> de estudiantes están satisfechos con la Universidad de Lima.
+      El Índice de Promotores Netos que es de <strong>+${formatInteger(h.nps_score)}</strong>, posiciona a la institución en el rango
       "<strong>${h.nps_tipo}</strong>" a nivel global,
       pero <strong>${h.tendencia}</strong> conforme avanza la carrera:
-      <strong>Inicial (${etapas.Inicial || 0})</strong> →
-      <strong>Intermedio (${etapas.Intermedio || 0})</strong> →
-      <strong>Avanzado (${etapas.Avanzado || 0})</strong>.
-      Teniendo una diferencia de <strong>-${h.delta}</strong> puntos en el ciclo de vida estudiantil.
+      <strong>Inicial (${formatDecimal(etapas.Inicial || 0)})</strong> →
+      <strong>Intermedio (${formatDecimal(etapas.Intermedio || 0)})</strong> →
+      <strong>Avanzado (${formatDecimal(etapas.Avanzado || 0)})</strong>.
+      Teniendo una diferencia de <strong>-${formatInteger(h.delta)}</strong> puntos en el ciclo de vida estudiantil.
     `;
   }
   function renderNPSBar(nps) {
     const total = nps.Promotores + nps.Pasivos + nps.Detractores;
     DOM.npsBar.innerHTML = `
       <div class="csat-segment" style="width:${pct(nps.Promotores, total)}%; background:var(--gray-700);"
-           data-label="Promotores (9-10)" data-value="${formatNumber(nps.Promotores)} (${pct2(nps.Promotores, total)}%)">${pct(nps.Promotores, total)}%</div>
+           data-label="Promotores (9-10)" data-value="${formatInteger(nps.Promotores)} (${formatPctDecimal(nps.Promotores, total)})">${formatPctSimple(nps.Promotores, total)}</div>
       <div class="csat-segment" style="width:${pct(nps.Pasivos, total)}%; background:var(--gray-400);"
-           data-label="Pasivos (7-8)" data-value="${formatNumber(nps.Pasivos)} (${pct2(nps.Pasivos, total)}%)">${pct(nps.Pasivos, total)}%</div>
+           data-label="Pasivos (7-8)" data-value="${formatInteger(nps.Pasivos)} (${formatPctDecimal(nps.Pasivos, total)})">${formatPctSimple(nps.Pasivos, total)}</div>
       <div class="csat-segment" style="width:${pct(nps.Detractores, total)}%; background:var(--ulima-orange);"
-           data-label="Detractores (0-6)" data-value="${formatNumber(nps.Detractores)} (${pct2(nps.Detractores, total)}%)">${pct(nps.Detractores, total)}%</div>
+           data-label="Detractores (0-6)" data-value="${formatInteger(nps.Detractores)} (${formatPctDecimal(nps.Detractores, total)})">${formatPctSimple(nps.Detractores, total)}</div>
     `;
     DOM.npsLegend.innerHTML = `
-      <div class="legend-item"><div class="legend-dot" style="background:var(--gray-700);"></div>Promotores: ${formatNumber(nps.Promotores)}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--gray-400);"></div>Pasivos: ${formatNumber(nps.Pasivos)}</div>
-      <div class="legend-item"><div class="legend-dot" style="background:var(--ulima-orange);"></div>Detractores: ${formatNumber(nps.Detractores)}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gray-700);"></div>Promotores: ${formatInteger(nps.Promotores)}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--gray-400);"></div>Pasivos: ${formatInteger(nps.Pasivos)}</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--ulima-orange);"></div>Detractores: ${formatInteger(nps.Detractores)}</div>
     `;
     addTooltipToSegments('#nps-bar .csat-segment');
   }
@@ -178,10 +218,10 @@
     DOM.csatBar.innerHTML = visibleLabels.map(l => {
       const p = pct(csat[l.key], total);
       return `<div class="csat-segment" style="width:${p}%; background:${l.color};"
-              data-label="${l.key}" data-value="${formatNumber(csat[l.key])} (${pct2(csat[l.key], total)}%)">${p < 2 ? '' : `${p}%`}</div>`;
+              data-label="${l.key}" data-value="${formatInteger(csat[l.key])} (${formatPctDecimal(csat[l.key], total)})">${p < 2 ? '' : formatPctSimple(csat[l.key], total)}</div>`;
     }).join('');
     DOM.csatLegend.innerHTML = visibleLabels.map(l =>
-      `<div class="legend-item"><div class="legend-dot" style="background:${l.color};"></div>${l.key}: ${formatNumber(csat[l.key])}</div>`
+      `<div class="legend-item"><div class="legend-dot" style="background:${l.color};"></div>${l.key}: ${formatInteger(csat[l.key])}</div>`
     ).join('');
     addTooltipToSegments('#csat-bar .csat-segment');
   }
@@ -202,11 +242,13 @@
       const barClass = item.pct >= 90 ? 'high' : item.pct >= 80 ? 'medium' : 'low';
       const barItem = document.createElement('div');
       barItem.className = 'bar-item';
+      // Formatear el porcentaje de la barra
+      const pctFormatted = item.pct.toFixed(1).replace('.', ',') + ' %';
       barItem.innerHTML = `
         <div class="bar-label">${item.dim}</div>
         <div class="bar-container">
           <div class="bar-fill animated ${barClass}" style="width:${item.pct}%; animation-delay:${idx * 0.08}s">
-            <span class="bar-value">${item.pct.toFixed(1)}%</span>
+            <span class="bar-value">${pctFormatted}</span>
           </div>
         </div>
       `;
@@ -221,7 +263,7 @@
           'Insatisfecho': 0, 'Totalmente insatisfecho': 0, 'No utilizo': 0, 'No conozco': 0
         };
         rows.forEach(r => Object.keys(conteos).forEach(k => { conteos[k] += r[k] || 0; }));
-        const lines = Object.entries(conteos).filter(([, v]) => v > 0).map(([k, v]) => `${k}: ${formatNumber(v)}`);
+        const lines = Object.entries(conteos).filter(([, v]) => v > 0).map(([k, v]) => `${k}: ${formatInteger(v)}`);
         if (lines.length === 0) return hideTooltip();
         showTooltip(e, lines.join('<br>'));
       });
@@ -325,8 +367,10 @@
       const px = cx + rFinal * Math.cos(angle);
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
+      // Formatear el porcentaje para el tooltip
+      const pctFormatted = formatPercent(d.pct, 1);
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
-                onmousemove="showTooltip(event, '${d.dim}: ${d.pct.toFixed(1)}%')" onmouseleave="hideTooltip()">
+                onmousemove="showTooltip(event, '${d.dim}: ${pctFormatted}')" onmouseleave="hideTooltip()">
                 <animate attributeName="cx" from="${ox}" to="${px}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
                 <animate attributeName="cy" from="${oy}" to="${py}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
                 <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="0.5s" fill="freeze"/>
@@ -351,36 +395,38 @@
     const hayFiltro  = fac || car || cic;
     const contexto   = hayFiltro ? [fac, car, cic].filter(Boolean).join(' · ') : '';
     let narrativa    = '';
+    // Función para formatear porcentaje en texto
+    const fmtPct = (val) => formatPercent(val, 1);
     if (hayFiltro) {
       narrativa += `<strong style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${contexto}</strong><br>`;
       if (fortalezas.length > 0) {
         const top = fortalezas.slice(0, 3);
         narrativa += `${fortalezas.length === 1 ? 'La dimensión mejor evaluada es' : 'Las dimensiones mejor evaluadas son'} `;
-        narrativa += top.map(d => `<strong>${d.dim}</strong> (${d.pct.toFixed(1)}%)`).join(', ');
+        narrativa += top.map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(', ');
         narrativa += `. En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones superan el 90% de satisfacción.`;
       } else {
         narrativa += `Ninguna dimensión alcanza el umbral de <strong>90%</strong> (Fortaleza). `;
         if (adecuados.length > 0) {
           const topAd = adecuados.slice(0, 2);
-          narrativa += `Las más cercanas son ${topAd.map(d => `<strong>${d.dim}</strong> (${d.pct.toFixed(1)}%)`).join(' y ')}.`;
+          narrativa += `Las más cercanas son ${topAd.map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ')}.`;
         }
       }
       if (atencion.length > 0) {
         narrativa += ` ${atencion.length === 1 ? 'Requiere' : 'Requieren'} atención: `;
-        narrativa += atencion.slice(0, 2).map(d => `<strong>${d.dim}</strong> (${d.pct.toFixed(1)}%)`).join(' y ');
+        narrativa += atencion.slice(0, 2).map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ');
         narrativa += ` por estar debajo del 80%.`;
       }
     } else {
       if (fortalezas.length > 0) {
         const top = fortalezas.slice(0, 2);
-        narrativa += `La satisfacción en ${top.map(d => `<strong>${d.dim}</strong> (${d.pct.toFixed(1)}%)`).join(' y ')} son las mejor evaluadas. `;
+        narrativa += `La satisfacción en ${top.map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ')} son las mejor evaluadas. `;
         narrativa += `En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones se encuentran en rango de Fortaleza (≥90%).`;
       } else {
         narrativa += `Actualmente ninguna dimensión alcanza el umbral de <strong>90%</strong> (Fortaleza).`;
       }
       if (atencion.length > 0) {
         narrativa += ` ${atencion.length === 1 ? 'La dimensión' : 'Las dimensiones'} `;
-        narrativa += atencion.slice(0, 2).map(d => `<strong>${d.dim}</strong> (${d.pct.toFixed(1)}%)`).join(' y ');
+        narrativa += atencion.slice(0, 2).map(d => `<strong>${d.dim}</strong> (${fmtPct(d.pct)})`).join(' y ');
         narrativa += ` ${atencion.length === 1 ? 'requiere' : 'requieren'} atención prioritaria.`;
       }
     }
@@ -419,28 +465,35 @@
     }).filter(item => parseFloat(item.top3box) > 0).sort((a, b) => parseFloat(b.top3box) - parseFloat(a.top3box));
     const tbody = $('tbody-preguntas');
     const fragment = document.createDocumentFragment();
-    const fmtPct = v => v < 3 ? '' : `${v}%`;
+    const fmtPct = v => v < 3 ? '' : `${v}%`; // esto se usaba antes, pero ahora cambiaremos
+    // Nueva función para formatear el número dentro de la barra de distribución
+    const fmtSeg = (val, pct) => {
+      if (pct < 3) return '';
+      return val.toString().replace('.', ','); // para el texto dentro de la barra (porcentaje entero o decimal)
+    };
     data.forEach(item => {
       const tr = document.createElement('tr');
       const catCorta = item.categoria === 'Administrativo y Bienestar' ? 'Bienestar' : item.categoria;
       const heatClass = parseFloat(item.top3box) >= 90 ? 'heat-high' : parseFloat(item.top3box) >= 80 ? 'heat-medium' : 'heat-low';
+      // Formatear top3box con coma y espacio para el %
+      const top3boxFormatted = item.top3box.replace('.', ',') + ' %';
       tr.innerHTML = `
         <td>${item.dimension}</td>
-        <td class="text-center"><span class="heatmap-cell ${heatClass}">${item.top3box}%</span></td>
+        <td class="text-center"><span class="heatmap-cell ${heatClass}">${top3boxFormatted}</span></td>
         <td class="text-center">${catCorta}</td>
         <td>
           <div class="distribution-bar animated">
-            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente Satisfecho" data-value="${item.totSat}">${fmtPct(item.pctTotSat)}</div>
-            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy Satisfecho" data-value="${item.muySat}">${fmtPct(item.pctMuySat)}</div>
-            <div class="distribution-segment" style="width:${item.pctSat}%; background: var(--gray-300); color: var(--gray-700);" data-label="Satisfecho" data-value="${item.sat}">${fmtPct(item.pctSat)}</div>
-            <div class="distribution-segment" style="width:${item.pctInsat}%; background: var(--ulima-orange);" data-label="Insatisfecho" data-value="${item.insat}">${fmtPct(item.pctInsat)}</div>
-            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente Insatisfecho" data-value="${item.totInsat}">${fmtPct(item.pctTotInsat)}</div>
+            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente Satisfecho" data-value="${formatInteger(item.totSat)}">${item.pctTotSat < 3 ? '' : formatInteger(item.pctTotSat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy Satisfecho" data-value="${formatInteger(item.muySat)}">${item.pctMuySat < 3 ? '' : formatInteger(item.pctMuySat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctSat}%; background: var(--gray-300); color: var(--gray-700);" data-label="Satisfecho" data-value="${formatInteger(item.sat)}">${item.pctSat < 3 ? '' : formatInteger(item.pctSat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctInsat}%; background: var(--ulima-orange);" data-label="Insatisfecho" data-value="${formatInteger(item.insat)}">${item.pctInsat < 3 ? '' : formatInteger(item.pctInsat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente Insatisfecho" data-value="${formatInteger(item.totInsat)}">${item.pctTotInsat < 3 ? '' : formatInteger(item.pctTotInsat) + ' %'}</div>
           </div>
         </td>
       `;
       tr.querySelectorAll('.distribution-segment').forEach(seg => {
         seg.addEventListener('mousemove', e =>
-          showTooltip(e, `${seg.dataset.label}: ${formatNumber(parseInt(seg.dataset.value))}`)
+          showTooltip(e, `${seg.dataset.label}: ${formatInteger(parseInt(seg.dataset.value))}`)
         );
         seg.addEventListener('mouseleave', hideTooltip);
       });
@@ -476,7 +529,7 @@
       Object.values(csatMap).forEach(v => { totalT3b += v.t3b; totalResp += v.total; });
       csatPromedioReferencia = totalResp > 0 ? (totalT3b / totalResp) * 100 : csatScoreGlobal;
     }
-    DOM.detallePromedioRef.textContent = `(${csatPromedioReferencia.toFixed(1)}%)`;
+    DOM.detallePromedioRef.textContent = `(${formatDecimal(csatPromedioReferencia)} %)`;
     const data = Object.entries(conteo).map(([carrera, encuestas]) => {
       const nps = npsMap[carrera];
       const csat = csatMap[carrera];
@@ -490,13 +543,13 @@
     data.forEach(item => {
       const tr = document.createElement('tr');
       const vsProm = item.vsProm >= 0
-        ? `<span style="color: #00B04F; font-weight: 600;">+${item.vsProm.toFixed(1)}</span>`
-        : `<span style="color: #FF0000; font-weight: 600;">${item.vsProm.toFixed(1)}</span>`;
+        ? `<span style="color: #00B04F; font-weight: 600;">+${formatDecimal(item.vsProm)}</span>`
+        : `<span style="color: #FF0000; font-weight: 600;">${formatDecimal(item.vsProm)}</span>`;
       tr.innerHTML = `
         <td>${item.carrera}</td>
-        <td class="text-center">${formatNumber(item.encuestas)}</td>
-        <td class="text-center" style="font-weight: 700;">${item.nps.toFixed(1)}</td>
-        <td class="text-center">${item.csat.toFixed(1)}%</td>
+        <td class="text-center">${formatInteger(item.encuestas)}</td>
+        <td class="text-center" style="font-weight: 700;">${formatDecimal(item.nps)}</td>
+        <td class="text-center">${formatPercent(item.csat)}</td>
         <td class="text-center">${vsProm}</td>
       `;
       fragment.appendChild(tr);
@@ -534,24 +587,24 @@
       .sort((a, b) => (a.pctNoConozco + a.pctNoUtilizo) - (b.pctNoConozco + b.pctNoUtilizo));
     const tbody = $('tbody-visibilidad');
     const fragment = document.createDocumentFragment();
-    const fmtVisibilidad = v => v < 6.5 ? '' : `${v.toFixed(1)}%`;
+    const fmtVisibilidad = v => v < 6.5 ? '' : formatDecimal(v, 1) + ' %';
     data.forEach(item => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${item.dimension}</td>
-        <td class="text-center">${formatNumber(item.noConozco)} (${item.pctNoConozco.toFixed(1)}%)</td>
-        <td class="text-center">${formatNumber(item.noUtilizo)} (${item.pctNoUtilizo.toFixed(1)}%)</td>
+        <td class="text-center">${formatInteger(item.noConozco)} (${formatDecimal(item.pctNoConozco, 1)} %)</td>
+        <td class="text-center">${formatInteger(item.noUtilizo)} (${formatDecimal(item.pctNoUtilizo, 1)} %)</td>
         <td>
           <div class="visibility-bar animated">
-            <div class="visibility-segment no-conozco" style="width:${item.pctNoConozco}%;" data-label="No Conozco" data-value="${item.noConozco}">${fmtVisibilidad(item.pctNoConozco)}</div>
-            <div class="visibility-segment no-utilizo" style="width:${item.pctNoUtilizo}%;" data-label="No Utilizo" data-value="${item.noUtilizo}">${fmtVisibilidad(item.pctNoUtilizo)}</div>
-            <div class="visibility-segment conocido" style="width:${item.pctConoce}%;" data-label="Conoce/Utiliza" data-value="${item.conoce}">${fmtVisibilidad(item.pctConoce)}</div>
+            <div class="visibility-segment no-conozco" style="width:${item.pctNoConozco}%;" data-label="No Conozco" data-value="${formatInteger(item.noConozco)}">${fmtVisibilidad(item.pctNoConozco)}</div>
+            <div class="visibility-segment no-utilizo" style="width:${item.pctNoUtilizo}%;" data-label="No Utilizo" data-value="${formatInteger(item.noUtilizo)}">${fmtVisibilidad(item.pctNoUtilizo)}</div>
+            <div class="visibility-segment conocido" style="width:${item.pctConoce}%;" data-label="Conoce/Utiliza" data-value="${formatInteger(item.conoce)}">${fmtVisibilidad(item.pctConoce)}</div>
           </div>
         </td>
       `;
       tr.querySelectorAll('.visibility-segment').forEach(seg => {
         seg.addEventListener('mousemove', e =>
-          showTooltip(e, `${seg.dataset.label}: ${formatNumber(parseInt(seg.dataset.value))}`)
+          showTooltip(e, `${seg.dataset.label}: ${formatInteger(parseInt(seg.dataset.value))}`)
         );
         seg.addEventListener('mouseleave', hideTooltip);
       });
@@ -575,47 +628,49 @@
     const hayFiltro = fac || car || cic;
     const contexto  = hayFiltro ? [fac, car, cic].filter(Boolean).join(' · ') : '';
     let narrativa   = '';
+    const fmtPct = (val) => formatDecimal(val, 1) + ' %';
     if (hayFiltro) {
       narrativa += `<strong style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${contexto}</strong><br>`;
       if (criticos.length > 0) {
         const top = criticos.slice(0, 3);
         narrativa += `${criticos.length === 1 ? 'El servicio con menor visibilidad es' : 'Los servicios con menor visibilidad son'} `;
-        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${d.pctNoConozco.toFixed(1)}% No Conozco + ${d.pctNoUtilizo.toFixed(1)}% No Utilizo)`).join(', ');
+        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(', ');
         narrativa += `. En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones tienen más del 50% de desconocimiento o no uso.`;
       } else if (moderados.length > 0) {
         const top = moderados.slice(0, 2);
         narrativa += `No hay servicios con desconocimiento crítico (>50%). Las dimensiones con mayor oportunidad son `;
-        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${d.pctNoConozco.toFixed(1)}% No Conozco + ${d.pctNoUtilizo.toFixed(1)}% No Utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
         narrativa += `.`;
       } else {
         const top = sorted.slice(0, 2);
         narrativa += `Los servicios presentan niveles aceptables de visibilidad. Las dimensiones con mayor margen de mejora son `;
-        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${d.pctNoConozco.toFixed(1)}% No Conozco + ${d.pctNoUtilizo.toFixed(1)}% No Utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${d.dimension}</strong> (${fmtPct(d.pctNoConozco)} No Conozco + ${fmtPct(d.pctNoUtilizo)} No Utilizo)`).join(' y ');
         narrativa += `.`;
       }
     } else {
       if (sorted.length >= 2) {
         const [lowest, secondLowest] = sorted;
-        narrativa += `<strong>${lowest.dimension} (${lowest.pctNoConozco.toFixed(1)}% No Conozco + ${lowest.pctNoUtilizo.toFixed(1)}% No Utilizo)</strong> y `;
-        narrativa += `<strong>${secondLowest.dimension} (${secondLowest.pctNoConozco.toFixed(1)}% No Conozco + ${secondLowest.pctNoUtilizo.toFixed(1)}% No Utilizo)</strong> `;
+        narrativa += `<strong>${lowest.dimension} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> y `;
+        narrativa += `<strong>${secondLowest.dimension} (${fmtPct(secondLowest.pctNoConozco)} No Conozco + ${fmtPct(secondLowest.pctNoUtilizo)} No Utilizo)</strong> `;
         narrativa += `son las que presentan menor visibilidad.`;
         if (criticos.length > 0) {
           narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50% de desconocimiento o no uso.`;
         }
       } else if (sorted.length === 1) {
         const [lowest] = sorted;
-        narrativa += `<strong>${lowest.dimension} (${lowest.pctNoConozco.toFixed(1)}% No Conozco + ${lowest.pctNoUtilizo.toFixed(1)}% No Utilizo)</strong> es la que presenta menor visibilidad.`;
+        narrativa += `<strong>${lowest.dimension} (${fmtPct(lowest.pctNoConozco)} No Conozco + ${fmtPct(lowest.pctNoUtilizo)} No Utilizo)</strong> es la que presenta menor visibilidad.`;
       }
     }
     DOM.insightAtencion.innerHTML = narrativa;
   }
-  function populateSelect(sel, placeholder, items) {
+  // Modificamos populateSelect para aceptar textos personalizados
+  function populateSelect(sel, placeholder, items, texts) {
     const current = sel.value;
     sel.innerHTML = `<option value="">${placeholder}</option>`;
-    items.forEach(item => {
+    items.forEach((item, index) => {
       const opt = document.createElement('option');
       opt.value = item;
-      opt.textContent = item;
+      opt.textContent = texts ? texts[index] : item;
       sel.appendChild(opt);
     });
     if (items.includes(current)) sel.value = current;
@@ -647,7 +702,9 @@
       const carVal = selCar?.value ?? '';
       if (selCic) {
         const ciclos = (facVal || carVal) ? getCiclosForFiltro(facVal, carVal) : filtros.ciclos;
-        populateSelect(selCic, 'Todos los ciclos', ciclos);
+        // Generar textos formateados para ciclos
+        const ciclosText = ciclos.map(c => formatCicloText(c));
+        populateSelect(selCic, 'Todos los ciclos', ciclos, ciclosText);
       }
       onChangeCallback?.();
       syncActiveClass();
@@ -658,7 +715,8 @@
         const facVal = selFac.value;
         const carVal = selCar.value;
         const ciclos = (facVal || carVal) ? getCiclosForFiltro(facVal, carVal) : cache.filtros.ciclos;
-        populateSelect(selCic, 'Todos los ciclos', ciclos);
+        const ciclosText = ciclos.map(c => formatCicloText(c));
+        populateSelect(selCic, 'Todos los ciclos', ciclos, ciclosText);
       }
       onChangeCallback?.();
       syncActiveClass();
