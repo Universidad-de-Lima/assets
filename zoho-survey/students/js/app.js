@@ -212,13 +212,11 @@
   // ==================== SECCIÓN EJECUTIVO ====================
   function renderEjecutivo() {
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
-    // Cambio en el título: agregar "DE"
     DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
     DOM.footerPeriodo.textContent =
       `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
 
-    // KPIs
     DOM.kpiNpsValue.textContent = formatDecimal(r.nps.score);
     DOM.kpiNpsBar.style.width = `${Math.min(100, Math.max(0, r.nps.score))}%`;
     DOM.kpiNpsMeta.textContent = `Meta ${formatInteger(META_NPS)}`;
@@ -292,14 +290,6 @@
     return rows.some(r => r.dimension === dimension && sumKeys(r, SAT_KEYS) > 0);
   }
 
-  function excluirCondicionesLaboratorio(rows) {
-    const tieneNoUso = rows.some(r =>
-      r.dimension === 'Equipamiento tecnológico en laboratorios' &&
-      ((r['No utilizo'] || 0) > 0 || (r['No conozco'] || 0) > 0)
-    );
-    return tieneNoUso ? 'Condiciones ambientales en laboratorios' : null;
-  }
-
   function renderTop3Bars(containerId, data) {
     const container = $(containerId);
     const fragment = document.createDocumentFragment();
@@ -308,7 +298,6 @@
       const barItem = document.createElement('div');
       barItem.className = 'bar-item';
       const pctFormatted = formatPercent(item.pct, 2);
-      // Aplicar formato al nombre de la dimensión
       const dimFormatted = formatDimensionName(item.dim);
       barItem.innerHTML = `
         <div class="bar-label">${dimFormatted}</div>
@@ -345,7 +334,6 @@
     const car = $('filter-carrera-top3').value;
     const cic = $('filter-ciclo-top3').value;
     const filtered = filtrarDatos(cache.dimensiones, fac, car, cic);
-    const dimLabExcluida = excluirCondicionesLaboratorio(filtered);
     const categorias = {
       academico: 'Académico',
       infraestructura: 'Infraestructura',
@@ -357,7 +345,6 @@
       const dims = {};
       filtered.filter(r => r.categoria === nombre).forEach(r => {
         if (!dimensionAplica(filtered, r.dimension)) return;
-        if (dimLabExcluida && r.dimension === dimLabExcluida) return;
         if (!dims[r.dimension]) dims[r.dimension] = { total: 0, top3: 0 };
         const total = sumKeys(r, SAT_KEYS);
         const top3 = sumKeys(r, SAT_TOP3_KEYS);
@@ -380,11 +367,9 @@
     const car = $('filter-carrera-radar').value;
     const cic = $('filter-ciclo-radar').value;
     const filtered = filtrarDatos(cache.dimensiones, fac, car, cic);
-    const dimLabExcluida = excluirCondicionesLaboratorio(filtered);
     const dims = {};
     filtered.forEach(r => {
       if (!dimensionAplica(filtered, r.dimension)) return;
-      if (dimLabExcluida && r.dimension === dimLabExcluida) return;
       if (!dims[r.dimension]) dims[r.dimension] = { total: 0, top3: 0, categoria: r.categoria };
       dims[r.dimension].total += sumKeys(r, SAT_KEYS);
       dims[r.dimension].top3 += sumKeys(r, SAT_TOP3_KEYS);
@@ -413,7 +398,6 @@
       const lx = cx + (maxR + labelOffset) * Math.cos(angle);
       const ly = cy + (maxR + labelOffset) * Math.sin(angle);
       const anchor = (angle > Math.PI / 2 || angle < -Math.PI / 2) ? 'end' : 'start';
-      // Aplicar formato al nombre de la dimensión en la etiqueta del radar
       const dimFormatted = formatDimensionName(d.dim);
       svgParts.push(`<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
                 dominant-baseline="middle" onmousemove="showTooltip(event, '${d.dim}')" onmouseleave="hideTooltip()">${cortarTexto(dimFormatted.replace(/<[^>]*>/g, ''), 26)}</text>`);
@@ -439,7 +423,6 @@
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
-      // En el tooltip también mostramos el nombre formateado (sin HTML)
       const dimTooltip = d.dim === 'Software especializado empleado en la carrera' ? 'Software especializado empleado en la carrera' : d.dim;
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
                 onmousemove="showTooltip(event, '${dimTooltip}: ${pctFormatted}')" onmouseleave="hideTooltip()">
@@ -469,7 +452,6 @@
     const contexto   = hayFiltro ? [fac, car, cic].filter(Boolean).join(' · ') : '';
     let narrativa    = '';
     const fmtPct = (val) => formatPercent(val, 2);
-    // Función para formatear nombre en insights (con HTML)
     const fmtDim = (dim) => formatDimensionName(dim);
     if (hayFiltro) {
       narrativa += `<strong style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${contexto}</strong><br>`;
@@ -547,7 +529,6 @@
       const catCorta = item.categoria === 'Administrativo y Bienestar' ? 'Bienestar' : item.categoria;
       const heatClass = parseFloat(item.top3box) >= 90 ? 'heat-high' : parseFloat(item.top3box) >= 80 ? 'heat-medium' : 'heat-low';
       const top3boxFormatted = formatPercent(parseFloat(item.top3box), 2);
-      // Aplicar formato al nombre de la dimensión en la primera columna
       const dimFormatted = formatDimensionName(item.dimension);
       tr.innerHTML = `
         <td>${dimFormatted}</td>
@@ -666,7 +647,6 @@
     const fmtVisibilidad = v => v < 6.5 ? '' : formatDecimal(v, 2) + ' %';
     data.forEach(item => {
       const tr = document.createElement('tr');
-      // Aplicar formato al nombre de la dimensión en la primera columna
       const dimFormatted = formatDimensionName(item.dimension);
       tr.innerHTML = `
         <td>${dimFormatted}</td>
