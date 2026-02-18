@@ -87,9 +87,9 @@
 
   // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
-    // Caso especial: Software especializado empleado en la carrera
     if (dim === 'Software especializado empleado en la carrera') {
-      return '<i>Software</i> especializado empleado en la carrera';
+      // Usamos un span con clase para evitar problemas de copiado
+      return '<span class="software-italic">Software</span> especializado empleado en la carrera';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
