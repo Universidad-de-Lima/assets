@@ -235,7 +235,7 @@
 
     const { nps_etapas: etapas } = h;
     DOM.insightHallazgos.innerHTML = `
-      Actualmente <strong>+${formatInteger(h.csat_pct)} %</strong> de estudiantes están satisfechos con la Universidad de Lima.
+      Actualmente, <strong>+${formatInteger(h.csat_pct)} %</strong> de estudiantes están satisfechos con la Universidad de Lima.
       El Índice de Promotores Netos, que es de <strong>+${formatInteger(h.nps_score)}</strong>, posiciona a la institución en el rango
       "<strong>${h.nps_tipo}</strong>" a nivel global,
       pero <strong>${h.tendencia}</strong> conforme avanza la carrera:
