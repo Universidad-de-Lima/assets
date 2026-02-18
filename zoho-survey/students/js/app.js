@@ -113,9 +113,9 @@
     return dim;
   };
 
-  // Fechas
+  // Fechas: ahora con mes completo y sin año
   const formatDate = (ds) =>
-    new Date(`${ds}T12:00:00`).toLocaleDateString('es-PE', { day: 'numeric', month: 'short' });
+    new Date(`${ds}T12:00:00`).toLocaleDateString('es-PE', { day: 'numeric', month: 'long' });
 
   // Cálculos simples
   const pct = (v, t) => t > 0 ? Math.round((v / t) * 100) : 0;
@@ -228,8 +228,9 @@
     const { resumen: r, hallazgos: h, nps, csat } = cache.dashboard;
     DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
+    // Cambio aquí: se elimina el año y se usa mes completo
     DOM.footerPeriodo.textContent =
-      `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año} · Dirección de Planificación y Acreditación`;
+      `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} · Dirección de Planificación y Acreditación`;
 
     DOM.kpiNpsValue.textContent = formatDecimal(r.nps.score);
     DOM.kpiNpsBar.style.width = `${Math.min(100, Math.max(0, r.nps.score))}%`;
@@ -241,7 +242,7 @@
 
     DOM.kpiDiasValue.textContent = formatInteger(r.dias_recoleccion);
     DOM.kpiDiasBar.style.width = `${(r.dias_recoleccion / r.dias) * 100}%`;
-    DOM.kpiDiasMeta.textContent = `${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} ${r.año}`;
+    DOM.kpiDiasMeta.textContent = `${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)}`;
 
     renderNPSBar(nps);
     renderCSATBar(csat);
