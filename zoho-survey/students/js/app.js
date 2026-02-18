@@ -88,8 +88,8 @@
   // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
-      // Usamos un span con clase para evitar problemas de copiado
-      return '<span class="software-italic">Software</span> especializado empleado en la carrera';
+      // Usamos etiqueta <i> para cursiva, evitando problemas de copiado
+      return '<i>Software</i> especializado empleado en la carrera';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
@@ -114,7 +114,7 @@
     return dim;
   };
 
-  // Fechas: ahora con mes completo y sin año
+  // Fechas: mes completo y sin año
   const formatDate = (ds) =>
     new Date(`${ds}T12:00:00`).toLocaleDateString('es-PE', { day: 'numeric', month: 'long' });
 
