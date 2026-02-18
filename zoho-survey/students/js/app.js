@@ -103,7 +103,7 @@
   // Versión sin HTML para tooltips
   const formatDimensionNamePlain = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
-      return 'Software especializado empleado en la carrera';
+      return '<span><i>Software</i> especializado empleado en la carrera</span>';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
