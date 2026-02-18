@@ -708,3 +708,6 @@ body {
 #tabla-visibilidad th.text-center {
   text-align: center !important;
 }
+.software-italic {
+  font-style: italic;
+}
