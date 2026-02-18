@@ -88,8 +88,21 @@
   // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
-      // Usamos etiqueta <i> para cursiva, evitando problemas de copiado
-      return '<span><i>Software</i> especializado empleado en la carrera</span>';
+      return '<i>Software</i> especializado empleado en la carrera';
+    }
+    if (dim === 'Portal web de la Universidad (MiUlima)') {
+      return 'Portal web de la Universidad (Mi Ulima)';
+    }
+    if (dim === 'Conexión WiFi en el campus') {
+      return 'Conexión Wi-Fi en el campus';
+    }
+    return dim;
+  };
+
+  // Versión sin HTML para tooltips
+  const formatDimensionNamePlain = (dim) => {
+    if (dim === 'Software especializado empleado en la carrera') {
+      return 'Software especializado empleado en la carrera';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
       return 'Portal web de la Universidad (Mi Ulima)';
@@ -235,8 +248,8 @@
 
     const { nps_etapas: etapas } = h;
     DOM.insightHallazgos.innerHTML = `
-      Actualmente, <strong>+${formatInteger(h.csat_pct)} %</strong> de estudiantes están satisfechos con la Universidad de Lima.
-      El Índice de Promotores Netos, que es de <strong>+${formatInteger(h.nps_score)}</strong>, posiciona a la institución en el rango
+      Actualmente <strong>+${formatInteger(h.csat_pct)} %</strong> de estudiantes están satisfechos con la Universidad de Lima.
+      El Índice de Promotores Netos que es de <strong>+${formatInteger(h.nps_score)}</strong>, posiciona a la institución en el rango
       "<strong>${h.nps_tipo}</strong>" a nivel global,
       pero <strong>${h.tendencia}</strong> conforme avanza la carrera:
       <strong>Inicial (${formatDecimal(etapas.Inicial || 0)})</strong> →
@@ -266,10 +279,10 @@
 
   function renderCSATBar(csat) {
     const labels = [
-      { key: 'Totalmente satisfecho',   color: 'var(--gray-900)' },
-      { key: 'Muy satisfecho',          color: 'var(--gray-600)' },
-      { key: 'Satisfecho',              color: 'var(--gray-400)' },
-      { key: 'Insatisfecho',            color: 'var(--ulima-orange)' },
+      { key: 'Totalmente satisfecho', color: 'var(--gray-900)' },
+      { key: 'Muy satisfecho',        color: 'var(--gray-600)' },
+      { key: 'Satisfecho',            color: 'var(--gray-400)' },
+      { key: 'Insatisfecho',          color: 'var(--ulima-orange)' },
       { key: 'Totalmente insatisfecho', color: 'var(--ulima-red)' }
     ];
     const total = labels.reduce((sum, l) => sum + (csat[l.key] || 0), 0);
@@ -300,8 +313,9 @@
       barItem.className = 'bar-item';
       const pctFormatted = formatPercent(item.pct, 2);
       const dimFormatted = formatDimensionName(item.dim);
+      // Envolvemos el contenido en un <span> para evitar problemas con flex
       barItem.innerHTML = `
-        <div class="bar-label">${dimFormatted}</div>
+        <div class="bar-label"><span>${dimFormatted}</span></div>
         <div class="bar-container">
           <div class="bar-fill animated ${barClass}" style="width:${item.pct}%; animation-delay:${idx * 0.08}s">
             <span class="bar-value">${pctFormatted}</span>
@@ -400,8 +414,9 @@
       const ly = cy + (maxR + labelOffset) * Math.sin(angle);
       const anchor = (angle > Math.PI / 2 || angle < -Math.PI / 2) ? 'end' : 'start';
       const dimFormatted = formatDimensionName(d.dim);
+      // Corregido: usar formatDimensionNamePlain para el tooltip
       svgParts.push(`<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
-                dominant-baseline="middle" onmousemove="showTooltip(event, '${d.dim}')" onmouseleave="hideTooltip()">${cortarTexto(dimFormatted.replace(/<[^>]*>/g, ''), 26)}</text>`);
+                dominant-baseline="middle" onmousemove="showTooltip(event, '${formatDimensionNamePlain(d.dim)}')" onmouseleave="hideTooltip()">${cortarTexto(dimFormatted.replace(/<[^>]*>/g, ''), 26)}</text>`);
     });
     const outerPoints = allDims.map((d, i) => {
       const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
@@ -424,7 +439,7 @@
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
-      const dimTooltip = d.dim;
+      const dimTooltip = formatDimensionNamePlain(d.dim);
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
                 onmousemove="showTooltip(event, '${dimTooltip}: ${pctFormatted}')" onmouseleave="hideTooltip()">
                 <animate attributeName="cx" from="${ox}" to="${px}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
@@ -460,9 +475,9 @@
         const top = fortalezas.slice(0, 3);
         narrativa += `${fortalezas.length === 1 ? 'La dimensión mejor evaluada es' : 'Las dimensiones mejor evaluadas son'} `;
         narrativa += top.map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(', ');
-        narrativa += `. En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones superan el 90 % de satisfacción.`;
+        narrativa += `. En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones superan el 90% de satisfacción.`;
       } else {
-        narrativa += `Ninguna dimensión alcanza el umbral de <strong>90 %</strong> (Fortaleza). `;
+        narrativa += `Ninguna dimensión alcanza el umbral de <strong>90%</strong> (Fortaleza). `;
         if (adecuados.length > 0) {
           const topAd = adecuados.slice(0, 2);
           narrativa += `Las más cercanas son ${topAd.map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ')}.`;
@@ -471,15 +486,15 @@
       if (atencion.length > 0) {
         narrativa += ` ${atencion.length === 1 ? 'Requiere' : 'Requieren'} atención: `;
         narrativa += atencion.slice(0, 2).map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ');
-        narrativa += ` por estar debajo del 80 %.`;
+        narrativa += ` por estar debajo del 80%.`;
       }
     } else {
       if (fortalezas.length > 0) {
         const top = fortalezas.slice(0, 2);
         narrativa += `La satisfacción en ${top.map(d => `<strong>${fmtDim(d.dim)}</strong> (${fmtPct(d.pct)})`).join(' y ')} son las mejor evaluadas. `;
-        narrativa += `En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones se encuentran en rango de Fortaleza (≥90 %).`;
+        narrativa += `En total, <strong>${fortalezas.length}</strong> de ${allDims.length} dimensiones se encuentran en rango de Fortaleza (≥90%).`;
       } else {
-        narrativa += `Actualmente ninguna dimensión alcanza el umbral de <strong>90 %</strong> (Fortaleza).`;
+        narrativa += `Actualmente ninguna dimensión alcanza el umbral de <strong>90%</strong> (Fortaleza).`;
       }
       if (atencion.length > 0) {
         narrativa += ` ${atencion.length === 1 ? 'La dimensión' : 'Las dimensiones'} `;
@@ -527,8 +542,8 @@
     const fragment = document.createDocumentFragment();
     data.forEach(item => {
       const tr = document.createElement('tr');
-      const catCorta = item.categoria === 'Administrativo y Bienestar' ? 'Servicios' : item.categoria;
-      const heatClass = parseFloat(item.top3box) >= META_CSAT ? 'heat-high' : parseFloat(item.top3box) >= 85 ? 'heat-medium' : 'heat-low';
+      const catCorta = item.categoria === 'Administrativo y Bienestar' ? 'Bienestar' : item.categoria;
+      const heatClass = parseFloat(item.top3box) >= 90 ? 'heat-high' : parseFloat(item.top3box) >= 80 ? 'heat-medium' : 'heat-low';
       const top3boxFormatted = formatPercent(parseFloat(item.top3box), 2);
       const dimFormatted = formatDimensionName(item.dimension);
       tr.innerHTML = `
@@ -537,11 +552,11 @@
         <td class="text-center">${catCorta}</td>
         <td>
           <div class="distribution-bar animated">
-            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente satisfecho" data-value="${formatInteger(item.totSat)}">${item.pctTotSat < 4 ? '' : formatInteger(item.pctTotSat) + ' %'}</div>
-            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy satisfecho" data-value="${formatInteger(item.muySat)}">${item.pctMuySat < 4 ? '' : formatInteger(item.pctMuySat) + ' %'}</div>
-            <div class="distribution-segment" style="width:${item.pctSat}%; background: var(--gray-300); color: var(--gray-700);" data-label="Satisfecho" data-value="${formatInteger(item.sat)}">${item.pctSat < 4 ? '' : formatInteger(item.pctSat) + ' %'}</div>
-            <div class="distribution-segment" style="width:${item.pctInsat}%; background: var(--ulima-orange);" data-label="Insatisfecho" data-value="${formatInteger(item.insat)}">${item.pctInsat < 4 ? '' : formatInteger(item.pctInsat) + ' %'}</div>
-            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente insatisfecho" data-value="${formatInteger(item.totInsat)}">${item.pctTotInsat < 4 ? '' : formatInteger(item.pctTotInsat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctTotSat}%; background: var(--gray-800);" data-label="Totalmente satisfecho" data-value="${formatInteger(item.totSat)}">${item.pctTotSat < 3 ? '' : formatInteger(item.pctTotSat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctMuySat}%; background: var(--gray-500);" data-label="Muy satisfecho" data-value="${formatInteger(item.muySat)}">${item.pctMuySat < 3 ? '' : formatInteger(item.pctMuySat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctSat}%; background: var(--gray-300); color: var(--gray-700);" data-label="Satisfecho" data-value="${formatInteger(item.sat)}">${item.pctSat < 3 ? '' : formatInteger(item.pctSat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctInsat}%; background: var(--ulima-orange);" data-label="Insatisfecho" data-value="${formatInteger(item.insat)}">${item.pctInsat < 3 ? '' : formatInteger(item.pctInsat) + ' %'}</div>
+            <div class="distribution-segment" style="width:${item.pctTotInsat}%; background: var(--ulima-red);" data-label="Totalmente insatisfecho" data-value="${formatInteger(item.totInsat)}">${item.pctTotInsat < 3 ? '' : formatInteger(item.pctTotInsat) + ' %'}</div>
           </div>
         </td>
       `;
@@ -657,7 +672,7 @@
           <div class="visibility-bar animated">
             <div class="visibility-segment no-conozco" style="width:${item.pctNoConozco}%;" data-label="No conozco" data-value="${formatInteger(item.noConozco)}">${fmtVisibilidad(item.pctNoConozco)}</div>
             <div class="visibility-segment no-utilizo" style="width:${item.pctNoUtilizo}%;" data-label="No utilizo" data-value="${formatInteger(item.noUtilizo)}">${fmtVisibilidad(item.pctNoUtilizo)}</div>
-            <div class="visibility-segment conocido" style="width:${item.pctConoce}%;" data-label="Conozco/Utilizo" data-value="${formatInteger(item.conoce)}">${fmtVisibilidad(item.pctConoce)}</div>
+            <div class="visibility-segment conocido" style="width:${item.pctConoce}%;" data-label="Conoce/Utiliza" data-value="${formatInteger(item.conoce)}">${fmtVisibilidad(item.pctConoce)}</div>
           </div>
         </td>
       `;
@@ -695,31 +710,31 @@
       if (criticos.length > 0) {
         const top = criticos.slice(0, 3);
         narrativa += `${criticos.length === 1 ? 'El servicio con menor visibilidad es' : 'Los servicios con menor visibilidad son'} `;
-        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} · No conozco + ${fmtPct(d.pctNoUtilizo)} · No utilizo)`).join(', ');
-        narrativa += `. En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones tienen más del 50 % de desconocimiento o no uso.`;
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No conozco + ${fmtPct(d.pctNoUtilizo)} No utilizo)`).join(', ');
+        narrativa += `. En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones tienen más del 50% de desconocimiento o no uso.`;
       } else if (moderados.length > 0) {
         const top = moderados.slice(0, 2);
-        narrativa += `No hay servicios con desconocimiento crítico (>50 %). Las dimensiones con mayor oportunidad son `;
-        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} · No conozco + ${fmtPct(d.pctNoUtilizo)} · No utilizo)`).join(' y ');
+        narrativa += `No hay servicios con desconocimiento crítico (>50%). Las dimensiones con mayor oportunidad son `;
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No conozco + ${fmtPct(d.pctNoUtilizo)} No utilizo)`).join(' y ');
         narrativa += `.`;
       } else {
         const top = sorted.slice(0, 2);
         narrativa += `Los servicios presentan niveles aceptables de visibilidad. Las dimensiones con mayor margen de mejora son `;
-        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} · No conozco + ${fmtPct(d.pctNoUtilizo)} · No utilizo)`).join(' y ');
+        narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} No conozco + ${fmtPct(d.pctNoUtilizo)} No utilizo)`).join(' y ');
         narrativa += `.`;
       }
     } else {
       if (sorted.length >= 2) {
         const [lowest, secondLowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> y `;
-        narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} · No conozco + ${fmtPct(secondLowest.pctNoUtilizo)} · No utilizo)</strong> `;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No conozco + ${fmtPct(lowest.pctNoUtilizo)} No utilizo)</strong> y `;
+        narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} No conozco + ${fmtPct(secondLowest.pctNoUtilizo)} No utilizo)</strong> `;
         narrativa += `son las que presentan menor visibilidad.`;
         if (criticos.length > 0) {
-          narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50 % de desconocimiento o no uso.`;
+          narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50% de desconocimiento o no uso.`;
         }
       } else if (sorted.length === 1) {
         const [lowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> es la que presenta menor visibilidad.`;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} No conozco + ${fmtPct(lowest.pctNoUtilizo)} No utilizo)</strong> es la que presenta menor visibilidad.`;
       }
     }
     DOM.insightAtencion.innerHTML = narrativa;
