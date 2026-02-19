@@ -727,15 +727,15 @@
     } else {
       if (sorted.length >= 2) {
         const [lowest, secondLowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> y `;
-        narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} · No conozco + ${fmtPct(secondLowest.pctNoUtilizo)} · No utilizo)</strong> `;
+        narrativa += `<strong>${fmtDim(lowest.dimension)}</strong> (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo) y `;
+        narrativa += `<strong>${fmtDim(secondLowest.dimension)}</strong> (${fmtPct(secondLowest.pctNoConozco)} · No conozco + ${fmtPct(secondLowest.pctNoUtilizo)} · No utilizo) `;
         narrativa += `son las que presentan <strong>menor visibilidad</strong>.`;
         if (criticos.length > 0) {
           narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50 % de desconocimiento o no uso.`;
         }
       } else if (sorted.length === 1) {
         const [lowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> es la que presenta <strong>menor visibilidad</strong>.`;
+        narrativa += `<strong>${fmtDim(lowest.dimension)}</strong> (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo) es la que presenta <strong>menor visibilidad</strong>.`;
       }
     }
     DOM.insightAtencion.innerHTML = narrativa;
