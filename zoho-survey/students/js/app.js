@@ -88,6 +88,7 @@
   // Formato de nombre de dimensión con HTML (para visualización)
   const formatDimensionName = (dim) => {
     if (dim === 'Software especializado empleado en la carrera') {
+      // Usamos etiqueta <i> para cursiva, evitando problemas de copiado
       return '<i>Software</i> especializado empleado en la carrera';
     }
     if (dim === 'Portal web de la Universidad (MiUlima)') {
@@ -111,6 +112,23 @@
       return 'Conexión Wi-Fi en el campus';
     }
     return dim;
+  };
+
+  // Versión SVG: usa <tspan> para cursiva (para elementos <text> SVG)
+  const formatDimensionNameSVG = (dim, maxLen = 26) => {
+    const plain = formatDimensionNamePlain(dim);
+    const truncated = cortarTexto(plain, maxLen);
+    if (dim === 'Software especializado empleado en la carrera' && truncated.startsWith('Software')) {
+      const rest = truncated.slice('Software'.length);
+      return `<tspan font-style="italic">Software</tspan>${rest}`;
+    }
+    return truncated;
+  };
+
+  // Versión escapada para atributos HTML inline (onmousemove): escapa < y > para que
+  // el parser HTML los convierta de vuelta antes de ejecutar el JS, permitiendo HTML en tooltips
+  const formatDimensionNameForAttr = (dim) => {
+    return formatDimensionName(dim).replace(/</g, '&lt;').replace(/>/g, '&gt;');
   };
 
   // Fechas: mes completo y sin año
@@ -313,9 +331,8 @@
       barItem.className = 'bar-item';
       const pctFormatted = formatPercent(item.pct, 2);
       const dimFormatted = formatDimensionName(item.dim);
-      // Envolvemos el contenido en un <span> para evitar problemas con flex
       barItem.innerHTML = `
-        <div class="bar-label"><span>${dimFormatted}</span></div>
+        <div class="bar-label">${dimFormatted}</div>
         <div class="bar-container">
           <div class="bar-fill animated ${barClass}" style="width:${item.pct}%; animation-delay:${idx * 0.08}s">
             <span class="bar-value">${pctFormatted}</span>
@@ -413,10 +430,8 @@
       const lx = cx + (maxR + labelOffset) * Math.cos(angle);
       const ly = cy + (maxR + labelOffset) * Math.sin(angle);
       const anchor = (angle > Math.PI / 2 || angle < -Math.PI / 2) ? 'end' : 'start';
-      const dimFormatted = formatDimensionName(d.dim);
-      // Corregido: usar formatDimensionNamePlain para el tooltip
       svgParts.push(`<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
-                dominant-baseline="middle" onmousemove="showTooltip(event, '${formatDimensionNamePlain(d.dim)}')" onmouseleave="hideTooltip()">${cortarTexto(dimFormatted.replace(/<[^>]*>/g, ''), 26)}</text>`);
+                dominant-baseline="middle" onmousemove="showTooltip(event, '${formatDimensionNamePlain(d.dim)}')" onmouseleave="hideTooltip()">${formatDimensionNameSVG(d.dim, 26)}</text>`);
     });
     const outerPoints = allDims.map((d, i) => {
       const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
@@ -439,7 +454,7 @@
       const py = cy + rFinal * Math.sin(angle);
       const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
-      const dimTooltip = formatDimensionNamePlain(d.dim);
+      const dimTooltip = formatDimensionNameForAttr(d.dim);
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
                 onmousemove="showTooltip(event, '${dimTooltip}: ${pctFormatted}')" onmouseleave="hideTooltip()">
                 <animate attributeName="cx" from="${ox}" to="${px}" dur="0.8s" fill="freeze" calcMode="spline" keySplines="0.25 0.1 0.25 1"/>
