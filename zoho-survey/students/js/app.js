@@ -710,7 +710,7 @@
       narrativa += `<strong style="font-size:11px; text-transform:uppercase; letter-spacing:0.5px;">${contexto}</strong><br>`;
       if (criticos.length > 0) {
         const top = criticos.slice(0, 3);
-        narrativa += `${criticos.length === 1 ? 'El servicio con menor visibilidad es' : 'Los servicios con menor visibilidad son'} `;
+        narrativa += `${criticos.length === 1 ? 'El servicio con <strong>menor visibilidad</strong> es' : 'Los servicios con <strong>menor visibilidad</strong> son'} `;
         narrativa += top.map(d => `<strong>${fmtDim(d.dimension)}</strong> (${fmtPct(d.pctNoConozco)} · No conozco + ${fmtPct(d.pctNoUtilizo)} · No utilizo)`).join(', ');
         narrativa += `. En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones tienen más del 50 % de desconocimiento o no uso.`;
       } else if (moderados.length > 0) {
@@ -729,13 +729,13 @@
         const [lowest, secondLowest] = sorted;
         narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> y `;
         narrativa += `<strong>${fmtDim(secondLowest.dimension)} (${fmtPct(secondLowest.pctNoConozco)} · No conozco + ${fmtPct(secondLowest.pctNoUtilizo)} · No utilizo)</strong> `;
-        narrativa += `son las que presentan menor visibilidad.`;
+        narrativa += `son las que presentan <strong>menor visibilidad</strong>.`;
         if (criticos.length > 0) {
           narrativa += ` En total, <strong>${criticos.length}</strong> de ${data.length} dimensiones superan el 50 % de desconocimiento o no uso.`;
         }
       } else if (sorted.length === 1) {
         const [lowest] = sorted;
-        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> es la que presenta menor visibilidad.`;
+        narrativa += `<strong>${fmtDim(lowest.dimension)} (${fmtPct(lowest.pctNoConozco)} · No conozco + ${fmtPct(lowest.pctNoUtilizo)} · No utilizo)</strong> es la que presenta <strong>menor visibilidad</strong>.`;
       }
     }
     DOM.insightAtencion.innerHTML = narrativa;
