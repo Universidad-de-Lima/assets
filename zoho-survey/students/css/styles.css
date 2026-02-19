@@ -16,6 +16,7 @@
   --gray-100: #F3F4F6;
   --gray-50: #F9FAFB;
   --white: #FFFFFF;
+  --black: #000000;
   --success-pastel: #ebfff5;
   --success-text: #065F46;
   --warning-pastel: #FEF3C7;
@@ -123,7 +124,7 @@ body {
 .header-title {
   font-size: 15px;
   font-weight: var(--font-medium);
-  color: var(--ulima-gray);
+  color: var(--black);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
