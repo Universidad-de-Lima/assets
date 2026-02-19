@@ -431,7 +431,7 @@
       const ly = cy + (maxR + labelOffset) * Math.sin(angle);
       const anchor = (angle > Math.PI / 2 || angle < -Math.PI / 2) ? 'end' : 'start';
       svgParts.push(`<text x="${lx}" y="${ly}" font-size="10" font-weight="500" fill="#6B7280" text-anchor="${anchor}"
-                dominant-baseline="middle" onmousemove="showTooltip(event, '${formatDimensionNamePlain(d.dim)}')" onmouseleave="hideTooltip()">${formatDimensionNameSVG(d.dim, 26)}</text>`);
+                dominant-baseline="middle" onmousemove="showTooltip(event, '${formatDimensionNameForAttr(d.dim)}')" onmouseleave="hideTooltip()">${formatDimensionNameSVG(d.dim, 26)}</text>`);
     });
     const outerPoints = allDims.map((d, i) => {
       const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
