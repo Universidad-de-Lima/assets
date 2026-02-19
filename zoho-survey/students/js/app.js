@@ -803,6 +803,26 @@
 
   // ==================== BARRA DE PROGRESO ====================
   function setupProgressBar() {
+    // Nav activo con IntersectionObserver
+    const navLinks = document.querySelectorAll('.nav-links a');
+    const sections = ['ejecutivo', 'operativo', 'analitico'].map(id => document.getElementById(id));
+    const setActive = (id) => {
+      navLinks.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+      });
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { threshold: 0.3 });
+    sections.forEach(s => s && observer.observe(s));
+    navLinks.forEach(a => {
+      a.addEventListener('click', () => {
+        const id = a.getAttribute('href').slice(1);
+        setActive(id);
+      });
+    });
     let ticking = false;
     window.addEventListener('scroll', () => {
       if (!ticking) {
