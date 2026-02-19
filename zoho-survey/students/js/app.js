@@ -438,7 +438,7 @@
       const oy = cy + maxR * Math.sin(angle);
       const px = cx + rFinal * Math.cos(angle);
       const py = cy + rFinal * Math.sin(angle);
-      const color = d.pct >= 90 ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
+      const color = d.pct >= META_CSAT ? '#374151' : d.pct >= 80 ? '#9CA3AF' : '#FF0000';
       const pctFormatted = formatPercent(d.pct, 2);
       const dimTooltip = formatDimensionNameForAttr(d.dim);
       svgParts.push(`<circle cx="${ox}" cy="${oy}" r="4" fill="${color}" style="cursor:pointer; opacity:0"
@@ -462,8 +462,8 @@
       if (DOM.insightFortaleza) DOM.insightFortaleza.innerHTML = 'Sin datos suficientes para el análisis.';
       return;
     }
-    const fortalezas = allDims.filter(d => d.pct >= 90).sort((a, b) => b.pct - a.pct);
-    const adecuados  = allDims.filter(d => d.pct >= 80 && d.pct < 90).sort((a, b) => b.pct - a.pct);
+    const fortalezas = allDims.filter(d => d.pct >= META_CSAT).sort((a, b) => b.pct - a.pct);
+    const adecuados  = allDims.filter(d => d.pct >= 80 && d.pct < META_CSAT).sort((a, b) => b.pct - a.pct);
     const atencion   = allDims.filter(d => d.pct < 80).sort((a, b) => a.pct - b.pct);
     const hayFiltro  = fac || car || cic;
     const contexto   = hayFiltro ? [fac, car, cic].filter(Boolean).join(' · ') : '';
