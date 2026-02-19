@@ -152,6 +152,11 @@ body {
   background: var(--ulima-orange-soft);
 }
 
+.nav-links a.active {
+  color: var(--ulima-orange);
+  background: var(--ulima-orange-soft);
+}
+
 .nav-links a:focus-visible {
   outline: var(--focus-outline);
   outline-offset: var(--focus-outline-offset);
