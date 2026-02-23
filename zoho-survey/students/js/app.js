@@ -2,7 +2,7 @@
   'use strict';
 
   // ==================== CONSTANTES GLOBALES ====================
-  const BASE_URL = 'https://Universidad-de-Lima.github.io/assets/zoho-survey/students/output';
+  const BASE_URL = 'https://Universidad-de-Lima.github.io/assets/zoho-survey/students/json';
   const META_NPS = 50;
   const META_CSAT = 93;
   const CARRERAS_12_CICLOS = ['Derecho', 'Psicología'];
