@@ -233,7 +233,7 @@
     DOM.headerTitle.textContent = `Encuesta de Satisfacción Estudiantil ${r.año}`;
     DOM.footerAnio.textContent = r.año;
     DOM.footerPeriodo.textContent =
-      `Período: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} · Dirección de Planificación y Acreditación`;
+      `Periodo: ${formatDate(r.fecha_inicio)} - ${formatDate(r.fecha_fin)} · Dirección de Planificación y Acreditación`;
 
     DOM.kpiNpsValue.textContent = formatDecimal(r.nps.score);
     DOM.kpiNpsBar.style.width = `${Math.min(100, Math.max(0, r.nps.score))}%`;
