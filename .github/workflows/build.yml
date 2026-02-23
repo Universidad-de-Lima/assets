@@ -5,6 +5,7 @@ on:
     paths:
       - "zoho-survey/students/data/**"
       - "zoho-survey/students/scripts/**"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -37,4 +38,3 @@ jobs:
           git add json/*.json
           git commit -m "Auto: update survey JSON" || echo "No changes to commit"
           git push
-
