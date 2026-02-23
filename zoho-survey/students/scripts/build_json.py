@@ -435,5 +435,3 @@ print(f"   - evolucion_temporal.json")
 print(f"   - ids.json (simplificado)")
 print(f"   - dashboard_data.json (NUEVO - datos consolidados)")
 print(f"   - filtros.json (NUEVO - listas para filtros)")
-
-
