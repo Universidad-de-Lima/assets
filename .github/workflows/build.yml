@@ -34,6 +34,7 @@ jobs:
         run: |
           git config user.name "survey-bot"
           git config user.email "survey-bot@users.noreply.github.com"
-          git add output/*.json
+          git add json/*.json
           git commit -m "Auto: update survey JSON" || echo "No changes to commit"
           git push
+
